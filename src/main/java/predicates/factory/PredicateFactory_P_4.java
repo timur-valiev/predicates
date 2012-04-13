@@ -11,12 +11,12 @@ import java.util.Iterator;
  * Date: 12.04.12
  * Time: 23:44
  */
-public class PredicateFactory_P extends PredicateFactory{
+public class PredicateFactory_P_4 extends PredicateFactory{
     private Integer dim;
     Permutation current;
     Permutation next;
 
-    public PredicateFactory_P(Integer dim) {
+    public PredicateFactory_P_4(Integer dim) {
         this.dim = dim;
 
     }
