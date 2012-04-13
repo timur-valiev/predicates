@@ -74,7 +74,18 @@ public class Func implements Iterable<Func>, Iterator<Func> {
         return this;
     }
 
-@Override
-    public void remove() {
+    @Override
+    public void remove() {}
+
+    public Integer getDim() {
+        return dim;
+    }
+
+    public Integer getCapacity() {
+        return capacity;
+    }
+
+    public Long getNum() {
+        return num;
     }
 }

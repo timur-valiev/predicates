@@ -70,7 +70,28 @@ public class Permutation implements Iterable<Permutation>, Iterator<Permutation>
     }
 
     public boolean isProductOfSimpleEqualCycles(){
-        return false;
+        ArrayList<Boolean> checked = new ArrayList<Boolean>(capacity);
+        Integer cs = 0;
+        for (int i=0;i<capacity;i++){
+            if (!checked.get(i)){
+                Integer ccs = 1;
+                checked.set(i,true);
+                Integer cur = value.get(i);
+                while(!checked.get(cur)){
+                    ccs++;
+                    checked.set(cur,true);
+                    cur = value.get(cur);
+                }
+                if(cs==0)
+                    cs = ccs;
+                else
+                    if(!cs.equals(ccs))
+                        return false;
+                if (!cur.equals(i))
+                    return false;
+            }
+        }
+        return true;
     }
 
     public Integer getCapacity() {
