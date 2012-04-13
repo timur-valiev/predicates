@@ -3,6 +3,7 @@ package predicates.domain;
 import com.google.common.collect.ImmutableList;
 
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -16,4 +17,12 @@ public class Predicate {
     private Integer capacity;
     private Set<ImmutableList<Integer>> vectors = new HashSet<ImmutableList<Integer>>();
 
+    public Predicate(Integer dim, Integer capacity) {
+        this.dim = dim;
+        this.capacity = capacity;
+    }
+
+    void addVector(List<Integer> vector){
+        vectors.add((ImmutableList<Integer>) vector);
+    }
 }

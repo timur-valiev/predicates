@@ -1,5 +1,6 @@
 package predicates.domain;
 
+import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
@@ -15,7 +16,17 @@ public class Permutation implements Iterable<Permutation>, Iterator<Permutation>
     private Integer capacity;
     private Integer num;
     private List<Integer> value;
-    
+    private List<Integer> nextPerm;
+
+    public Permutation(Integer capacity) {
+        this.capacity = capacity;
+        nextPerm = new ArrayList<Integer>(capacity);
+        for (int i=0;i<capacity;i++)
+            nextPerm.set(i,i);
+        value = null;
+        num = 0;
+    }
+
     @Override
     public Iterator<Permutation> iterator() {
         return this;    
@@ -23,7 +34,7 @@ public class Permutation implements Iterable<Permutation>, Iterator<Permutation>
 
     @Override
     public boolean hasNext() {
-        return num < factorial(capacity)-1; 
+        return nextPerm != null;
     }
 
     private int factorial(Integer x) {
@@ -32,30 +43,42 @@ public class Permutation implements Iterable<Permutation>, Iterator<Permutation>
 
     @Override
     public Permutation next() {
-        if (next(value,0))
-            return this;
-        return null;
+        value = new ArrayList<Integer>(nextPerm);
+        num++;
+        return this;
     }
 
-    private boolean next(List<Integer> value, int position) {
+    private boolean next(List<Integer> perm, int position) {
         if (position == capacity)
             return false;
-        if (next(value, position+1))
+        if (next(perm, position+1))
             return true;
-        Integer next = max(value.subList(position+1, value.size()));
-        if (next < value.get(position))
+        Integer next = max(perm.subList(position+1, perm.size()));
+        if (next < perm.get(position))
             return false;
         Integer pos = 0;
-        for (int i = position+1; i < value.size();i++) {
-            if (value.get(i) > value.get(position) && value.get(i) <= next) {
-                next = value.get(i);
+        for (int i = position+1; i < perm.size();i++) {
+            if (perm.get(i) > perm.get(position) && perm.get(i) <= next) {
+                next = perm.get(i);
                 pos = i;
             }
         }
-        Integer tmp = value.get(pos);
-        value.set(pos,value.get(position));
-        value.set(position, tmp);
+        Integer tmp = perm.get(pos);
+        perm.set(pos,perm.get(position));
+        perm.set(position, tmp);
         return true;
+    }
+
+    public Integer getCapacity() {
+        return capacity;
+    }
+
+    public Integer getNum() {
+        return num;
+    }
+
+    public List<Integer> getValue() {
+        return value;
     }
 
     @Override

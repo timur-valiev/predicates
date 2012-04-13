@@ -1,5 +1,6 @@
 package predicates.factory;
 
+import predicates.domain.Permutation;
 import predicates.domain.Predicate;
 
 import java.util.Iterator;
@@ -12,15 +13,17 @@ import java.util.Iterator;
  */
 public class PredicateFactory_P extends PredicateFactory{
     private Integer dim;
-    Predicate current;
+    Permutation current;
+    Permutation next;
 
     public PredicateFactory_P(Integer dim) {
         this.dim = dim;
+
     }
 
     @Override
     public boolean hasNext() {
-        return false;
+        return next!=null;
     }
 
     @Override

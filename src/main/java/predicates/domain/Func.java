@@ -14,13 +14,15 @@ public class Func implements Iterable<Func>, Iterator<Func> {
     private Integer dim;
     private Integer capacity;
     private List<Integer> values;
+    private List<Integer> nextFunc;
     private Long num;
 
     public Func(Integer dim, Integer capacity) {
         this.dim = dim;
         this.capacity = capacity;
         num = 0l;
-        values = new ArrayList<Integer>((int) Math.pow(dim, capacity));
+        values = null;
+        nextFunc = new ArrayList<Integer>((int) Math.pow(dim, capacity));
     }
 
     public Integer getValue(int code){
@@ -43,26 +45,27 @@ public class Func implements Iterable<Func>, Iterator<Func> {
 
     @Override
     public boolean hasNext() {
-        return (num != (long) Math.pow(dim, capacity));
+        return nextFunc != null;
     }
 
     @Override
     public Func next() {
+        values = new ArrayList<Integer>(nextFunc);
         int i = 0;
         boolean changed = false;
-        while (i < values.size() && !changed){
-            if (values.get(i) == dim-1){
-                values.set(i,0);
+        while (i < nextFunc.size() && !changed){
+            if (nextFunc.get(i) == dim-1){
+                nextFunc.set(i,0);
                 i++;
             } else {
-                values.set(i, values.get(i)+1);
+                nextFunc.set(i, nextFunc.get(i)+1);
                 changed = true;
                 num++;
             }
         }
-        if (changed)
-            return this;
-        return null;
+        if (!changed)
+            nextFunc = null;
+        return this;
     }
 
 
