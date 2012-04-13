@@ -69,6 +69,10 @@ public class Permutation implements Iterable<Permutation>, Iterator<Permutation>
         return true;
     }
 
+    public boolean isProductOfSimpleEqualCycles(){
+        return false;
+    }
+
     public Integer getCapacity() {
         return capacity;
     }

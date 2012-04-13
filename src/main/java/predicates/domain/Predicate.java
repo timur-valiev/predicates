@@ -22,7 +22,11 @@ public class Predicate {
         this.capacity = capacity;
     }
 
-    void addVector(List<Integer> vector){
+    public void addVector(List<Integer> vector){
         vectors.add((ImmutableList<Integer>) vector);
+    }
+
+    public Set<ImmutableList<Integer>> getVectors() {
+        return vectors;
     }
 }
