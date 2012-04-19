@@ -20,9 +20,11 @@ public class Func implements Iterable<Func>, Iterator<Func> {
     public Func(Integer dim, Integer capacity) {
         this.dim = dim;
         this.capacity = capacity;
-        num = 0l;
+        num = -1l;
         values = null;
-        nextFunc = new ArrayList<Integer>((int) Math.pow(dim, capacity));
+        nextFunc = new ArrayList<Integer>();
+        for (int i=0;i < (int) Math.pow(dim, capacity);i++)
+            nextFunc.add(0);
     }
 
     public Integer getValue(int code){
@@ -87,5 +89,9 @@ public class Func implements Iterable<Func>, Iterator<Func> {
 
     public Long getNum() {
         return num;
+    }
+
+    public List<Integer> getValues() {
+        return values;
     }
 }

@@ -23,7 +23,7 @@ public class Predicate {
     }
 
     public void addVector(List<Integer> vector){
-        vectors.add((ImmutableList<Integer>) vector);
+        vectors.add(ImmutableList.copyOf(vector));
     }
 
     public Set<ImmutableList<Integer>> getVectors() {

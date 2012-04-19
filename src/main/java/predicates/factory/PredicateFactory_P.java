@@ -12,8 +12,7 @@ import java.util.Iterator;
  * Date: 12.04.12
  * Time: 23:44
  */
-public class PredicateFactory_P extends PredicateFactory{
-    protected Integer dim;
+public class PredicateFactory_P extends PredicateFactory implements Iterable<Predicate>, Iterator<Predicate> {
     protected Permutation currentPerm;
     protected Permutation nextPerm;
     private Predicate value;
@@ -21,7 +20,7 @@ public class PredicateFactory_P extends PredicateFactory{
     public PredicateFactory_P(Integer dim) {
         this.dim = dim;
         currentPerm = null;
-        nextPerm = new Permutation(dim);
+        nextPerm = new Permutation(dim).next();
         while (!nextPerm.isProductOfSimpleEqualCycles())
             nextPerm.next();
     }
@@ -33,8 +32,9 @@ public class PredicateFactory_P extends PredicateFactory{
 
     @Override
     public Predicate next() {
-        currentPerm = nextPerm;
-        while (!nextPerm.isProductOfSimpleEqualCycles() && nextPerm != null)
+        currentPerm = new Permutation(nextPerm);
+        nextPerm = nextPerm.next();
+        while (nextPerm != null&& !nextPerm.isProductOfSimpleEqualCycles())
             nextPerm.next();
         makePredicate();
         return value;
@@ -44,8 +44,8 @@ public class PredicateFactory_P extends PredicateFactory{
         value = new Predicate(dim, 2);
         for (int i = 0;i < currentPerm.getValue().size();i++ ){
             ArrayList<Integer> vector = new ArrayList<Integer>();
-            vector.set(0,i);
-            vector.set(1,currentPerm.getValue().get(i));
+            vector.add(i);
+            vector.add(currentPerm.getValue().get(i));
             value.addVector(vector);
         }
     }

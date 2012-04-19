@@ -1,10 +1,9 @@
 package predicates.domain;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import java.util.*;
 
 import static java.util.Collections.max;
+import static java.util.Collections.sort;
 
 /**
  * Created by IntelliJ IDEA.
@@ -17,14 +16,28 @@ public class Permutation implements Iterable<Permutation>, Iterator<Permutation>
     private Integer num;
     private List<Integer> value;
     private List<Integer> nextPerm;
+    private Set<Integer> primes = new HashSet<Integer>();
 
     public Permutation(Integer capacity) {
         this.capacity = capacity;
         nextPerm = new ArrayList<Integer>(capacity);
         for (int i=0;i<capacity;i++)
-            nextPerm.set(i,i);
+            nextPerm.add(i);
         value = null;
         num = 0;
+        primes.add(2);
+        primes.add(3);
+        primes.add(5);
+        primes.add(7);
+        primes.add(11);
+    }
+
+    public Permutation(Permutation perm) {
+        this.capacity = perm.getCapacity();
+        this.nextPerm = perm.nextPerm!=null?new ArrayList<Integer>(perm.nextPerm):null;
+        this.value = new ArrayList<Integer>(perm.getValue());
+        this.num = perm.getNum();
+        this.primes = perm.primes;
     }
 
     @Override
@@ -37,19 +50,19 @@ public class Permutation implements Iterable<Permutation>, Iterator<Permutation>
         return nextPerm != null;
     }
 
-    private int factorial(Integer x) {
-        return x<=0?1:x*factorial(x-1);
-    }
-
     @Override
     public Permutation next() {
+        if (nextPerm==null)
+            return null;
         value = new ArrayList<Integer>(nextPerm);
+        if(!next(nextPerm,0))
+            nextPerm = null;
         num++;
         return this;
     }
 
     private boolean next(List<Integer> perm, int position) {
-        if (position == capacity)
+        if (position == capacity - 1)
             return false;
         if (next(perm, position+1))
             return true;
@@ -66,11 +79,17 @@ public class Permutation implements Iterable<Permutation>, Iterator<Permutation>
         Integer tmp = perm.get(pos);
         perm.set(pos,perm.get(position));
         perm.set(position, tmp);
+        List<Integer> tail = perm.subList(position + 1, perm.size());
+        sort(tail);
+        for (int i = position+1;i<perm.size();i++)
+            perm.set(i,tail.get(i-position-1));
         return true;
     }
 
     public boolean isProductOfSimpleEqualCycles(){
-        ArrayList<Boolean> checked = new ArrayList<Boolean>(capacity);
+        ArrayList<Boolean> checked = new ArrayList<Boolean>();
+        for (int i=0;i<capacity;i++)
+            checked.add(false);
         Integer cs = 0;
         for (int i=0;i<capacity;i++){
             if (!checked.get(i)){
@@ -91,7 +110,7 @@ public class Permutation implements Iterable<Permutation>, Iterator<Permutation>
                     return false;
             }
         }
-        return true;
+        return primes.contains(cs);
     }
 
     public Integer getCapacity() {

@@ -18,23 +18,5 @@ public class PredicateFactory_O extends PredicateFactory{
         this.dim = dim;
     }
 
-    @Override
-    public boolean hasNext() {
-        return false;
-    }
 
-    @Override
-    public Predicate next() {
-        return null;
-    }
-
-    @Override
-    public Iterator<Predicate> iterator() {
-        return this;
-    }
-
-    @Override
-    public void remove() {
-
-    }
 }
