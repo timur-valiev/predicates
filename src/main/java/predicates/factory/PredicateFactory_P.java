@@ -4,6 +4,7 @@ import predicates.domain.Permutation;
 import predicates.domain.Predicate;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Iterator;
 
 /**
@@ -15,7 +16,6 @@ import java.util.Iterator;
 public class PredicateFactory_P extends PredicateFactory implements Iterable<Predicate>, Iterator<Predicate> {
     protected Permutation currentPerm;
     protected Permutation nextPerm;
-    private Predicate value;
 
     public PredicateFactory_P(Integer dim) {
         this.dim = dim;
@@ -36,18 +36,15 @@ public class PredicateFactory_P extends PredicateFactory implements Iterable<Pre
         nextPerm = nextPerm.next();
         while (nextPerm != null&& !nextPerm.isProductOfSimpleEqualCycles())
             nextPerm.next();
-        makePredicate();
-        return value;
+        return makePredicate();
     }
 
-    private void makePredicate() {
-        value = new Predicate(dim, 2);
+    private Predicate makePredicate() {
+        Predicate result = new Predicate(dim, 2);
         for (int i = 0;i < currentPerm.getValue().size();i++ ){
-            ArrayList<Integer> vector = new ArrayList<Integer>();
-            vector.add(i);
-            vector.add(currentPerm.getValue().get(i));
-            value.addVector(vector);
+            result.addVector(Arrays.asList(i, currentPerm.getValue().get(i)));
         }
+        return result;
     }
 
     @Override

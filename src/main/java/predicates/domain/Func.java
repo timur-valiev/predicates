@@ -13,22 +13,16 @@ import java.util.List;
 public class Func implements Iterable<Func>, Iterator<Func> {
     private Integer dim;
     private Integer capacity;
-    private List<Integer> values;
-    private List<Integer> nextFunc;
-    private Long num;
+    private Tuple values;
 
     public Func(Integer dim, Integer capacity) {
         this.dim = dim;
         this.capacity = capacity;
-        num = -1l;
-        values = null;
-        nextFunc = new ArrayList<Integer>();
-        for (int i=0;i < (int) Math.pow(dim, capacity);i++)
-            nextFunc.add(0);
+        values = new Tuple(dim, (int) Math.pow(dim,capacity));
     }
 
     public Integer getValue(int code){
-        return values.get(code);
+        return values.getValue(code);
     }
 
     public Integer getValue(Iterable<Integer> args){
@@ -47,26 +41,12 @@ public class Func implements Iterable<Func>, Iterator<Func> {
 
     @Override
     public boolean hasNext() {
-        return nextFunc != null;
+        return values.hasNext();
     }
 
     @Override
     public Func next() {
-        values = new ArrayList<Integer>(nextFunc);
-        int i = 0;
-        boolean changed = false;
-        while (i < nextFunc.size() && !changed){
-            if (nextFunc.get(i) == dim-1){
-                nextFunc.set(i,0);
-                i++;
-            } else {
-                nextFunc.set(i, nextFunc.get(i)+1);
-                changed = true;
-                num++;
-            }
-        }
-        if (!changed)
-            nextFunc = null;
+        values.next();
         return this;
     }
 
@@ -79,19 +59,12 @@ public class Func implements Iterable<Func>, Iterator<Func> {
     @Override
     public void remove() {}
 
-    public Integer getDim() {
-        return dim;
-    }
-
     public Integer getCapacity() {
         return capacity;
     }
 
-    public Long getNum() {
-        return num;
-    }
 
-    public List<Integer> getValues() {
+    public Tuple getValues() {
         return values;
     }
 }

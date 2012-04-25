@@ -4,6 +4,7 @@ import predicates.domain.Func;
 import predicates.domain.Predicate;
 import predicates.factory.PredicateFactory_E;
 import predicates.factory.PredicateFactory_L;
+import predicates.factory.PredicateFactory_O;
 import predicates.factory.PredicateFactory_P;
 
 /**
@@ -18,7 +19,7 @@ public class App
         for (Func func: new Func(4,1)){
             for (Predicate predicate: new PredicateFactory_P(4)){
                 if (PredicateService.checkSave(predicate, func)) {
-                    System.out.println(func.getValues().toString() + " " + predicate.getVectors().toString());
+                    System.out.println(func.getValues().getValues().toString() + " " + predicate.getVectors().toString());
                 }
             }
         }
@@ -28,7 +29,7 @@ public class App
         for (Func func: new Func(4,1)){
             Predicate p = predicateFactory_e.getMostExtensivePredicate(func);
             if (p!=null){
-                System.out.println(func.getValues().toString() + " " + p.getVectors().toString());
+                System.out.println(func.getValues().getValues().toString() + " " + p.getVectors().toString());
             }
         }
 
@@ -37,13 +38,20 @@ public class App
             System.out.println("Class L: " + predicate4.getVectors().toString());
             for(Func func:new Func(4,1))
                 if (PredicateService.checkSave(predicate4, func)) {
-                    System.out.println(func.getValues().toString());
+                    System.out.println(func.getValues().getValues().toString());
                 }
 
         } catch (Exception e) {
             e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
         }
 
+        System.out.println("Class O:");
+        for (Func func: new Func(4,1)){
+            for (Predicate predicate: new PredicateFactory_O(4)){
+                if (PredicateService.checkSave(predicate, func)) {
+                    System.out.println(func.getValues().getValues().toString() + " " + predicate.getVectors().toString());
+                }
+            }
+        }
     }
-
 }

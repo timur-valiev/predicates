@@ -2,6 +2,7 @@ package predicates.factory;
 
 import predicates.domain.Func;
 import predicates.domain.Predicate;
+import predicates.domain.Tuple;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,9 +30,9 @@ public class PredicateFactory_L extends PredicateFactory{
 
     public Predicate getPredicate4(){
         Predicate predicate = new Predicate(dim,4);
-        for (Func func: new Func(4,1)){
-            if(table[func.getValue(0)][func.getValue(1)]==table[func.getValue(2)][func.getValue(3)])
-                predicate.addVector(func.getValues());
+        for (Tuple tuple: new Tuple(4,4)){
+            if(table[tuple.getValue(0)][tuple.getValue(1)]==table[tuple.getValue(2)][tuple.getValue(3)])
+                predicate.addVector(tuple.getValues());
         }
         return predicate;
     } 

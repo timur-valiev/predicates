@@ -15,11 +15,14 @@ public class Tuple implements Iterable<Tuple>, Iterator<Tuple> {
     private int dim;
     private List<Integer> current;
     private List<Integer> next;
-
+    private Integer capacity;
 
     public Tuple(int dim, int capacity) {
         this.dim = dim;
-        next =  Arrays.asList(new Integer[capacity]);
+        this.capacity = capacity;
+        next = new ArrayList<Integer>();
+        for (int i=0;i<capacity;i++)
+            next.add(0);
     }
 
     public Integer getValue(int code){
@@ -57,4 +60,14 @@ public class Tuple implements Iterable<Tuple>, Iterator<Tuple> {
 
     @Override
     public void remove() {}
+
+    public List<Integer> getValues() {
+        return current;
+    }
+
+    public void reset() {
+        next = new ArrayList<Integer>();
+        for (int i=0;i<capacity;i++)
+            next.add(0);
+    }
 }
