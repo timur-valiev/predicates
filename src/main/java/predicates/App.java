@@ -2,10 +2,7 @@ package predicates;
 
 import predicates.domain.Func;
 import predicates.domain.Predicate;
-import predicates.factory.PredicateFactory_E;
-import predicates.factory.PredicateFactory_L;
-import predicates.factory.PredicateFactory_O;
-import predicates.factory.PredicateFactory_P;
+import predicates.factory.*;
 
 /**
  * Hello world!
@@ -48,6 +45,22 @@ public class App
         System.out.println("Class O:");
         for (Func func: new Func(4,1)){
             for (Predicate predicate: new PredicateFactory_O(4)){
+                if (PredicateService.checkSave(predicate, func)) {
+                    System.out.println(func.getValues().getValues().toString() + " " + predicate.getVectors().toString());
+                }
+            }
+        }
+
+        System.out.println("Class C:");
+        for (Func func: new Func(4,1)){
+            for (Predicate predicate: new PredicateFactory_C(4,2)){
+                if (PredicateService.checkSave(predicate, func)) {
+                    System.out.println(func.getValues().getValues().toString() + " " + predicate.getVectors().toString());
+                }
+            }
+        }
+        for (Func func: new Func(4,1)){
+            for (Predicate predicate: new PredicateFactory_C(4,3)){
                 if (PredicateService.checkSave(predicate, func)) {
                     System.out.println(func.getValues().getValues().toString() + " " + predicate.getVectors().toString());
                 }

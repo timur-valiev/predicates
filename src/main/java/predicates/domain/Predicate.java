@@ -22,6 +22,12 @@ public class Predicate {
         this.capacity = capacity;
     }
 
+    public Predicate(Predicate refl) {
+        this.dim = refl.dim;
+        this.capacity = refl.capacity;
+        vectors = new HashSet<ImmutableList<Integer>>(refl.vectors);
+    }
+
     public void addVector(List<Integer> vector){
         vectors.add(ImmutableList.copyOf(vector));
     }

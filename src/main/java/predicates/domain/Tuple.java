@@ -70,4 +70,18 @@ public class Tuple implements Iterable<Tuple>, Iterator<Tuple> {
         for (int i=0;i<capacity;i++)
             next.add(0);
     }
+
+    public boolean isNull() {
+        for (Integer i: current)
+            if (i!=0)
+                return false;
+        return true;
+    }
+
+    public boolean isFull() {
+        for (Integer i: current)
+            if (i!= dim-1)
+                return false;
+        return true;
+    }
 }
