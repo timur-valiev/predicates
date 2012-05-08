@@ -25,6 +25,13 @@ public class Tuple implements Iterable<Tuple>, Iterator<Tuple> {
             next.add(0);
     }
 
+    public Tuple(Tuple next) {
+        this.dim = next.dim;
+        this.capacity = next.capacity;
+        this.next = new ArrayList<Integer>(next.next);
+        this.current = new ArrayList<Integer>(next.current);
+    }
+
     public Integer getValue(int code){
         return current.get(code);
     }
@@ -36,6 +43,10 @@ public class Tuple implements Iterable<Tuple>, Iterator<Tuple> {
 
     @Override
     public Tuple next() {
+        if (next == null) {
+            current = null;
+            return null;
+        }
         current = new ArrayList<Integer>(next);
         int i = 0;
         boolean changed = false;

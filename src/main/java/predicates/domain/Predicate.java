@@ -32,6 +32,10 @@ public class Predicate {
         vectors.add(ImmutableList.copyOf(vector));
     }
 
+    public boolean contains(List<Integer> v) {
+        return vectors.contains(ImmutableList.copyOf(v));
+    }
+
     public Set<ImmutableList<Integer>> getVectors() {
         return vectors;
     }

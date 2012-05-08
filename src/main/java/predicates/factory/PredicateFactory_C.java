@@ -21,10 +21,7 @@ public class PredicateFactory_C extends PredicateFactory implements Iterable<Pre
         this.capacity = capacity;
         this.predicateSet = new HashSet<Predicate>();
 
-        Predicate refl = new Predicate(dim, capacity);
-        for (Tuple tuple: new Tuple(dim, capacity))
-            if (isRefl(tuple))
-                refl.addVector(tuple.getValues());
+        Predicate refl = PredicateFactory_Reflecsive.getTau(dim, capacity);  //нужно перебор сделать
         
         for (Tuple c: new Tuple(2,dim)) {
             if (c.isNull() || c.isFull())
@@ -43,7 +40,7 @@ public class PredicateFactory_C extends PredicateFactory implements Iterable<Pre
                     notIncluded.add(tuple2);
             }
 
-            List<Tuple> candidates = (ArrayList<Tuple>) Arrays.asList(notIncluded.toArray());
+            List<Tuple> candidates = new ArrayList<Tuple>(notIncluded);
             for (Tuple cand: new Tuple(2, candidates.size())){
                 if (cand.isFull())
                     continue;
@@ -57,17 +54,6 @@ public class PredicateFactory_C extends PredicateFactory implements Iterable<Pre
         current = predicateSet.iterator();
     }
 
-
-    private boolean isRefl(Tuple tuple) {
-        boolean bb[] = new boolean[dim];
-        for (Integer i: tuple.getValues()){
-            if (!bb[i])
-                bb[i] = true;
-            else
-                return true;
-        }
-        return false;
-    }
 
     @Override
     public Iterator<Predicate> iterator() {
