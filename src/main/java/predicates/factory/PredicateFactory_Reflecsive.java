@@ -12,6 +12,9 @@ import predicates.domain.Tuple;
 public class PredicateFactory_Reflecsive extends PredicateFactory{
     
     public static Predicate getTau(Integer dim, Integer capacity){
+        if (capacity == 1){
+            return new Predicate(dim,capacity);
+        }
         Predicate refl = new Predicate(dim, capacity);
         for (Tuple tuple: new Tuple(dim, capacity))
             if (isRefl(tuple, dim))

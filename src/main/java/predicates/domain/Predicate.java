@@ -39,4 +39,23 @@ public class Predicate {
     public Set<ImmutableList<Integer>> getVectors() {
         return vectors;
     }
+
+
+    @Override
+    public boolean equals(Object obj) {
+        boolean result = false;
+        if (obj instanceof Predicate) {
+            Predicate that = (Predicate) obj;
+            result = this.vectors.containsAll(that.vectors) && that.vectors.containsAll(this.vectors);
+        }
+        return result;
+    }
+
+    @Override
+    public int hashCode() {
+        Integer ans = dim.hashCode()+capacity.hashCode();
+        for(ImmutableList<Integer> list:vectors)
+            ans += list.hashCode();
+        return ans;
+    }
 }

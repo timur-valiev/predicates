@@ -15,7 +15,6 @@ import java.util.Iterator;
 public class PredicateFactory_B extends PredicateFactory implements Iterable<Predicate>, Iterator<Predicate> {
     private Integer h;
     private Integer l;
-    private Tuple current;
     private Tuple next;
     private Predicate refl;
 
@@ -54,6 +53,7 @@ public class PredicateFactory_B extends PredicateFactory implements Iterable<Pre
 
     @Override
     public Predicate next() {
+        Tuple current;
         if(next == null) {
             current = null;
             return null;

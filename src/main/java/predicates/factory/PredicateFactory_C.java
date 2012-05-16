@@ -21,10 +21,10 @@ public class PredicateFactory_C extends PredicateFactory implements Iterable<Pre
         this.capacity = capacity;
         this.predicateSet = new HashSet<Predicate>();
 
-        Predicate refl = PredicateFactory_Reflecsive.getTau(dim, capacity);  //нужно перебор сделать
+        Predicate refl = PredicateFactory_Reflecsive.getTau(dim, capacity);
         
         for (Tuple c: new Tuple(2,dim)) {
-            if (c.isNull() || c.isFull())
+            if (c.isStart() || c.isFull())
                 continue;
 
             Predicate prefinal = new Predicate(refl);

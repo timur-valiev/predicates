@@ -82,7 +82,9 @@ public class Tuple implements Iterable<Tuple>, Iterator<Tuple> {
             next.add(0);
     }
 
-    public boolean isNull() {
+    public boolean isStart() {
+        if(current == null)
+            return false;
         for (Integer i: current)
             if (i!=0)
                 return false;
@@ -90,8 +92,31 @@ public class Tuple implements Iterable<Tuple>, Iterator<Tuple> {
     }
 
     public boolean isFull() {
+        if(current == null)
+            return false;
         for (Integer i: current)
             if (i!= dim-1)
+                return false;
+        return true;
+    }
+
+    public boolean isPreFull() {
+        if(current == null)
+            return false;
+        if(current.get(0)!= dim-2)
+            return false;
+        for(int i=1;i<capacity;i++)
+            if(current.get(i)!=dim-1)
+                return false;
+        return true;
+    }
+
+    public boolean isHomogeneous(){
+        if(current == null)
+            return false;
+        int a = current.get(0);
+        for (Integer i: current)
+            if (i!= a)
                 return false;
         return true;
     }

@@ -48,10 +48,12 @@ public class PredicateFactory_O extends PredicateFactory implements Iterable<Pre
 
     private Predicate makePredicate() {
         Predicate result = new Predicate(dim,2);
+
         for (int i = 1;i < currentPermutation.getCapacity(); i++)
             result.addVector(Arrays.asList(currentPermutation.getValue().get(0),currentPermutation.getValue().get(i)));
         for (int i = 0;i < currentPermutation.getCapacity() - 1; i++)
             result.addVector(Arrays.asList(currentPermutation.getValue().get(i),currentPermutation.getValue().get(currentPermutation.getCapacity()-1)));
+
         int edge = 0;
         for (int parent = 1; parent < dim - 2; parent++) {
             for (int child = 2;child < dim - 1; child++){
@@ -60,6 +62,12 @@ public class PredicateFactory_O extends PredicateFactory implements Iterable<Pre
                 edge++;
             }
         }
+
+        for (int i=dim-4;i>0;i--)
+            for(int j=i+1;j<dim-2;j++)
+                for(int k=j+1;k<dim-1;k++)
+                    if (result.contains(Arrays.asList(j,k))&&result.contains(Arrays.asList(i,j)))
+                        result.addVector(Arrays.asList(i,k));
         return result;
     }
 
