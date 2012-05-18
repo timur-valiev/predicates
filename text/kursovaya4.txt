@@ -1,0 +1,514 @@
+﻿Введение и постановка задачи
+Как известно, каждый предполный класс в P_k можно задать как множество функций, сохраняющих некоторый предикат. Более того, все эти предикаты можно разделить на 6 попарно непересекающихся семейств: P, O, L, E, C, B, описание которых можно найти в книге Марченкова С. С. Функциональные системы с операцией суперпозиции. 
+Постановка задачи
+1. Найти все предикаты, описывающие предполные классы в P_4, разбив их на семейства.
+2. Для каждой функции одной переменной из P_4 определить, каким предполным классам она принадлежит.
+Для решения задачи была написана программа на языке программирования Java, исходный код которой можно найти, перейдя по следующей ссылке https://github.com/zloi-timur/predicates . Там же можно найти результаты и вспомогательные материалы, в том числе и этот текст.
+Далее будет описаны устройство проекта и  алгоритмы, которые использовались для решения поставленной задачи. 
+
+Описание программы 
+Общие моменты
+Для создания проекта использовалась методология DDD(Domain-driven design), по этому хотелось бы начать с описания основных сущностей(реализованных в Java классах).
+Т.к. при решении задачи часто приходилось перебирать однотипные объекты, многие классы реализуют интерфейсы Iterator и Iterable, что позволяет облегчить понимание исходного кода.
+При написании программы часто использовались следующие обозначения: 
+Dim – “значность”, Capacity – «местность».  
+Описание сущностей
+Все определения сущностей находятся в пакете predicates.domain
+Tuple
+Класс, который описывает упорядоченный набор чисел из capacity чисел от 0 до dim-1. реализует интерфейсы Iterator и Iterable, что позволяет перебирать кортежи по порядку(лексикографическому).
+Function
+Класс, который описывает функцию, зависящую из capacity переменных чисел, из P_dim . реализует интерфейсы Iterator и Iterable, что позволяет перебирать функции по порядку столбцов значений (лексикографическому).
+Permutation
+Класс, который описывает перестановку чисел от 0 до capacity-1. реализует интерфейсы Iterator и Iterable, что позволяет перебирать перестановки по порядку(лексикографическому).
+Predicate 
+Описывает предикат, храня Set<ImmutableList<Integer>> - множество векторов, удовлетворяющих предикату.
+Описание алгоритмов нахождения и перебора предикатов
+Для каждого семейства предикатов был написан класс PredicateFactory_X, где X – название соответствующего семейства. Каждый из них реализует интерфейсы Iterable<Predicate>, Iterator<Predicate>.
+Все они лежат в пакете predicates.factory.
+Т.к. при нахождении необходимых предикатов во многих случаях требуется перебор нескольких параметров и при некоторых комбинациях могут получаться  одинаковые результаты, необходимо было не выдавать уже полученные идентичные предикаты. Эта  проблема чаще всего решалась использованием структур данных, реализующих интерфейс Set<Predicate>. 
+Перейдем к подробному описанию каждого класса.
+PredicateFactory_P
+Каждый из предикатов класса Р задается перестановкой, которая является произведением циклов одной и той же простой длины(в нашем случае получается 2 цикла длины 2), по этому для нахождения всех предикатов программа перебирает все перестановки, проверяет на выполнение вышеописанного условия(в классе Permutation есть соответствующий метод) и, при успешном результате проверки, строит предикат.
+PredicateFactory_O
+Семейство О содержит любой двуместный предикат, который задает на Е_к частичный порядок с
+наименьшим и наибольшим элементами (ограниченный частичный порядок). Для нахождения всех таких предикатов программа перебирает все перестановки чисел от 0 до dim-1(от 0 до 3 в нашем случае), считая, что первый элемент перестановки будет наибольшим, последний – наименьшим. Далее берутся все пары элементов (a_i,a_j), где i<j и перебираются все из 2^((k-2)*(k-3)) вариантов считать или не считать, что эта пара упорядочена, причем отсекаются те конфигурации, в которых не выполняется транзитивность. Для каждого подошедшего варианта строится предикат.
+PredicateFactory_E
+Семейство Е состоит из всех двуместных предикатов, которые  представляют собой отношения эквивалентности на E_k, отличные от полного и единичного отношений (нетривиальные отношения эквивалентности). Таким образом, каждое отношение эквивалентности из Е разбивает множество Е_k на l классов попарно эквивалентных элементов, где 1 < I < к. Нахождение всех таких предикатов осуществляется при помощи перебора всех возможных разбиений и построения соответствующих предикатов. 
+PredicateFactory_L
+Предикаты этого семейства существуют только при к = p^l где р — простое число и l >= 1. В этом случае на множестве Е_к можно определить бинарную коммутативную операцию + так, 
+что G = <E_k,;+> будет являться абелевой р-группой периода р . Иными словами, в абелевой группе G порядок любого элемента, отличного от нуля группы, равен р. 
+Итак, если к = р^l и G = (Е_k; +) — абелева р-группа периода р, то семейству L принадлежит предикат x_1+x_2=x_3+x_4. 
+В нашем случае p=l=2 и существует только одна таблица сложения, удовлетворяющая описанным условиям: {{0, 1, 2, 3};{1, 0, 3, 2};{2, 3, 0, 1};{3, 2, 1, 0}}. 
+Для нахождения всех таких предикатов программа перебирает все перестановки чисел от 0 до dim-1(от 0 до 3 в нашем случае) и строит предикат x_1+x_2=x_3+x_4. При k=4 для всех перестановок предикаты оказались равными.
+PredicateFactory_C
+Семейство С состоит из всех центральных предикатов.
+Предикат р(х_1,...,x_m ) называется центральным, если он вполне рефлексивен, вполне симметричен, отличен от тождественно истинного предиката и существует такое непустое подмножество С множества E_k [центр предиката р),  что предикату р удовлетворяет всякий набор 
+(a_1,..., а_m) из Е_k^m, как только {а_1,..., а_m} П С != 0.
+Предикат p(x_1,..., x_m) называется вполне рефлексивным, если либо m = 1, либо  если m >= 2 и 
+p(a_1,..., а_m) = И для любого набора (a_1,...,a_m) из Е_k^m, содержащего не более m — 1 различных значений. 
+Предикат р называется вполне симметричным, если он не меняется при любой перестановке переменных.  
+Для перебора всех предикатов нам необходимо перебрать размерность предиката.
+Далее, для каждой размерности, мы строим минимальный вполне рефлексивный предикат.
+На следующем шаге мы перебираем все возможные центры и добавляем вектора, которые имеют с ним непустое пересечение, в предикат.
+На последнем этапе перебора мы  всеми возможными способами пытаемся его расширить еще не вошедшими векторами, учитывая условия симметричности и нетривиальности.
+PredicateFactory_B
+Если h>=З, l >= 1, k >= h^l и q — отображение множества Е_k на  множество Е_h^l, то семейству В принадлежит предикат, который является полным прообразом 1-й декартовой степени предиката tau при отображении q.
+При k=4 нам подходит h=3,4 и l =1.
+Для каждого из двух вариантов построим множества предикатов следующим образом:
+1. переберем все отображения множества Е_k на  множество Е_h^l.
+2. для каждого отображения будем строить предикат answer, перебирая все возможные кортежи и проверяя, должны ли они входить в него при условии того, что answer должен быть прообразом предиката тау. 
+Получение результатов
+Теперь, получив все искомые предикаты, необходимо проверить, какие функции сохраняют их. Для такой проверки в проекте есть класс PredicateService, который содержит метод с сигнатурой public static boolean checkSave(Predicate predicate, Function function). 
+Теперь достаточно перебрать все пары, состоящие из функций и найденных предикатов, и применить к ним данный метод.
+
+Результаты и заключение
+Были найдены все предикаты, описывающие предполные классы в P_4, и построена таблица(см. приложение А) принадлежности функций одной переменной четырехзначной логики этим предикатам. 
+Была создан Java-проект с архитектурой, позволяющей использовать его для задач, связанных с предикатами и предполными классами при значениях k>4(сейчас только при нахождении предикатов семейств L и B есть ограничения на k).
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Приложение А
+
+Таблица принадлежности функций предполным классам
+
+[0, 0, 0, 0]  oooooooooo oooooooooo o+++++++++ ++++++++++ o+ooo+ooo+ ++++++++++ ++++++++++ ++++++++++ ++
+[1, 0, 0, 0]  oooooooooo oooooooooo oo+o+++o+o ++oo+++ooo o+oooooooo +o++++++oo +oo+o+++++ ++++++++++ ++
+[2, 0, 0, 0]  oooooooooo oooooooooo oo++o+o++o ++o+ooo++o o+oooooooo +++o++o++o +++o+o++o+ ++++++++++ ++
+[3, 0, 0, 0]  oooooooooo oooooooooo oo++o++o++ o++ooo+o++ ooooooooo+ +o+o+o++++ ++o++oo+++ o+++++++++ ++
+[0, 1, 0, 0]  oooooooooo oooooooooo ooo++++ooo +o++++++++ o+ooo++ooo +o++++++oo +oo+o+++++ ++++++++++ ++
+[1, 1, 0, 0]  oooooooooo oooooooooo o+oo+++ooo +ooo+++ooo o+oooo+ooo +o++++++oo +oo+o+++++ ++++++++++ ++
+[2, 1, 0, 0]  oooooooooo oooooooooo ooo+o+oooo +oo+ooo++o o+oooo+ooo +o++o+oooo +oooo++ooo +++o++o+o+ ++
+[3, 1, 0, 0]  oooooooooo oooooooooo ooo+o++ooo oo+ooo+o++ oooooo+ooo ooo++o+ooo +oo+o+oo++ o+++o++o+o ++
+[0, 2, 0, 0]  oooooooooo oooooooooo ooo+o+o+oo +o++ooo+++ o+ooo+oooo +++o++o++o +++o+o++o+ ++++++++++ ++
+[1, 2, 0, 0]  oooooooooo oooooooooo ooooo+oooo +ooooooooo o+oooooooo +o+oo+oooo +ooooo+ooo +++o++o+o+ ++
+[2, 2, 0, 0]  o+oooooooo oooooooooo o+o+++o+oo +oo++oo++o o+oooooooo +++o++o++o +++o+o++o+ ++++++++++ ++
+[3, 2, 0, 0]  oooooooooo oooooooooo ooo+++oooo oo+ooooo++ oooooooooo oo+o+ooo+o o+oo+oo+oo o+o+++oo++ o+
+[0, 3, 0, 0]  oooooooooo oooooooooo ooo+o++oo+ oo++oo++++ ooooo+ooo+ +o+o+o++++ ++o++oo+++ o+++++++++ ++
+[1, 3, 0, 0]  oooooooooo oooooooooo ooooo++ooo oooooo+ooo oooooooooo oooo+o+ooo +oo+oooo++ o+++o++o+o ++
+[2, 3, 0, 0]  oooooooooo oooooooooo ooo+++oooo ooo+ooo++o oooooooooo oo+o+ooo+o o+oo+oo+oo o+o+++oo++ o+
+[3, 3, 0, 0]  oo+ooooooo oooooooooo o+o++++oo+ oo+o+o+o++ ooooooooo+ +o+o+o++++ ++o++oo+++ o+++++++++ ++
+[0, 0, 1, 0]  oooooooooo oooooooooo oooo+o+o+o +o+o+++oo+ o+ooo+oooo +o++++++oo +oo+o+++++ ++++++++++ ++
+[1, 0, 1, 0]  +ooooooooo oooooooooo o+oo+o+++o +oo++++ooo o+oooooooo +o++++++oo +oo+o+++++ ++++++++++ ++
+[2, 0, 1, 0]  oooooooooo oooooooooo oooooooo+o +ooooooooo o+oooooooo +o+oo+oooo +ooooo+ooo +++o+o++o+ ++
+[3, 0, 1, 0]  oooooooooo oooooooooo oooooo+++o oo+ooo+oo+ oooooooooo oooo+o+ooo +oo+oooo++ o+++oo+o+o ++
+[0, 1, 1, 0]  +ooooooooo oooooooooo o+oo+o+oo+ +++o+++oo+ ++ooo++ooo +o++++++oo +oo+o+++++ ++++++++++ ++
+[1, 1, 1, 0]  oooooooooo oooooooooo oooo+o+ooo ++o++++ooo ++oooo+ooo +o++++++oo +oo+o+++++ ++++++++++ ++
+[2, 1, 1, 0]  oooooooooo oooooooooo oooooooooo ++oooooooo ++oooo+ooo +o++o+oooo +oooo++ooo +++o+oo+o+ ++
+[3, 1, 1, 0]  oooooooooo oooooooooo oooooo+oo+ o++ooo+oo+ +ooooo+ooo ooo++++ooo +oo+o+oo++ ++++oo+++o ++
+[0, 2, 1, 0]  oooooooooo oooooooooo ooooooooo+ +++oooooo+ ++ooo+oooo +o+o++o+oo +ooooo++o+ +++o+oo+++ ++
+[1, 2, 1, 0]  oooooooooo oooooooooo ooooooo+oo ++o+oooooo ++oooooooo +o+oo+oooo +ooooo+ooo +++o+oo+o+ ++
+[2, 2, 1, 0]  oooooooooo oooooooooo oooo+ooooo ++oo+ooooo ++oooooooo +o+oo+oooo +ooooo+ooo +++o+oo+o+ ++
+[3, 2, 1, 0]  +++ooooooo oooooooooo o+oo+oo+o+ o++oooooo+ +ooooooooo oooo++oooo oooooooooo ooooooo++o o+
+[0, 3, 1, 0]  oooooooooo oooooooooo oooooo+ooo oo+ooo+oo+ ooooo+oooo oooo+o++oo +oo+ooo+++ o+++oo+o+o ++
+[1, 3, 1, 0]  oooooooooo oooooooooo oooooo+ooo ooo+oo+ooo oooooooooo oooo+o+ooo +oo+oooo++ o+++oo+o++ ++
+[2, 3, 1, 0]  +ooooooooo oooooooooo o+oo+ooooo oooooooooo oooooooooo oooooooooo oooooooooo oooooooooo o+
+[3, 3, 1, 0]  oooooooooo oooooooooo oooo+o+ooo oo+o+o+oo+ oooooooooo oooo+o+ooo +oo+oooo++ o+++oo+o+o ++
+[0, 0, 2, 0]  oooooooooo oooooooooo ooo+oo+++o +o++++++++ o+o+o+oooo +++o++o++o +++o+o++o+ ++++++++++ ++
+[1, 0, 2, 0]  oooooooooo oooooooooo oooooo+o+o +ooo+++ooo o+o+oooooo +++oo+oooo +o+ooo+ooo +++o+o++o+ ++
+[2, 0, 2, 0]  oooooooooo oooooooooo o+o+ooo++o +oo+ooo++o o+o+oooooo +++o++o++o +++o+o++o+ ++++++++++ ++
+[3, 0, 2, 0]  oooooooooo oooooooooo ooo+oo+o+o oo+ooo+o++ ooo+oooooo o++o+ooo+o o++o+oo+oo o+o++++o++ o+
+[0, 1, 2, 0]  oooooooooo ooooo+oooo ooo+oo+oo+ ++++++++++ ++o+o++ooo ++++++o+oo +ooo+o++++ +++o+oo+++ ++
+[1, 1, 2, 0]  oooooooooo oooooooooo oooooo+ooo ++oo+++ooo ++o+oo+ooo ++++o+oooo +ooooo+o+o +++o+oo+o+ ++
+[2, 1, 2, 0]  oooooooooo oooooooooo ooo+oooooo ++o+ooo++o ++o+oo+ooo ++++o+oooo +ooo+o+ooo +++o+oo+o+ ++
+[3, 1, 2, 0]  oo+ooooooo ooooo+oooo o+o+oo+oo+ o++ooo+o++ +oo+oo+ooo o+o+++oooo oooo+ooo+o oo+o+oo++o o+
+[0, 2, 2, 0]  o+oooooooo oooooooooo o+o+ooo+o+ ++++ooo+++ ++o+o+oooo +++o++o++o +++o+o++o+ ++++++++++ ++
+[1, 2, 2, 0]  oooooooooo oooooooooo oooooooooo ++oooooooo ++o+oooooo +++oo+oooo +o+ooo+ooo +++o+oo+o+ ++
+[2, 2, 2, 0]  oooooooooo oooooooooo ooo+ooo+oo ++o++oo++o ++o+oooooo +++o++o++o +++o+o++o+ ++++++++++ ++
+[3, 2, 2, 0]  oooooooooo oooooooooo ooo+ooooo+ o++ooooo++ +oo+oooooo o++o++oo+o o++o+o++oo o+o+++o+++ o+
+[0, 3, 2, 0]  oooooooooo oooooooooo ooo+oo+ooo oo++oo++++ ooo+o+oooo o++o+oo++o o+oo+oo+o+ o+o+++oo++ o+
+[1, 3, 2, 0]  oooooooooo oooooooooo o+oooo+ooo oooooo+ooo ooo+oooooo o+oooooooo oooooooooo oooo+ooooo o+
+[2, 3, 2, 0]  oooooooooo oooooooooo ooo+oooooo ooo+ooo++o ooo+oooooo o++o+ooo+o o+oo+o++oo o+o+++oo++ o+
+[3, 3, 2, 0]  oooooooooo oooooooooo ooo+oo+ooo oo+o+o+o++ ooo+oooooo o++o+ooo+o o+oo+o++oo o+o+++oo++ ++
+[0, 0, 3, 0]  oooooooooo oooooooooo ooo+oo+o++ oo+o+++o++ ooooo+ooo+ +o+o+o++++ ++o++oo+++ o+++++++++ ++
+[1, 0, 3, 0]  oooooooooo oooooooooo oooooo+++o oooo+++ooo oooooooooo oooo+o+ooo +oo+oooo++ o+++oo+o+o ++
+[2, 0, 3, 0]  oooooooooo oooooooooo ooo+oooo+o oooooooo+o oooooooooo oo+o+ooo+o o+oo+oo+oo o+o++++o++ o+
+[3, 0, 3, 0]  oo+ooooooo oooooooooo o+o+oo++++ oo++oo+o++ ooooooooo+ +o+o+o++++ ++o++oo+++ o+++++++++ ++
+[0, 1, 3, 0]  oooooooooo oooooooooo ooo+oo+ooo oo+o+++o++ ooooo++ooo ooo++o++oo +oo+ooo+++ o+++oo+o+o ++
+[1, 1, 3, 0]  oooooooooo oooooooooo oooooo+ooo oooo+++ooo oooooo+ooo ooo++o+ooo +oo+oooo++ ++++oo+o+o ++
+[2, 1, 3, 0]  oooooooooo oooooooooo o+o+oooooo oooooooo+o oooooo+ooo ooo+oooooo oooooooooo oo+ooooooo o+
+[3, 1, 3, 0]  oooooooooo oooooooooo ooo+oo+ooo oo++oo+o++ oooooo+ooo ooo++o+ooo +oo+oooo++ ++++oo+o++ ++
+[0, 2, 3, 0]  oooooooooo oooooooooo ooo+oooooo oo+ooooo++ ooooo+oooo oo+o+oo++o o+oo+oo+o+ o+o+++oo++ o+
+[1, 2, 3, 0]  o+oooooooo oooooooooo o+ooooo+oo oooooooooo oooooooooo oooooooooo oooooooooo oooooooooo o+
+[2, 2, 3, 0]  oooooooooo oooooooooo ooo+oooooo oooo+ooo+o oooooooooo oo+o+ooo+o o+oo+oo+oo o+o+++oo++ ++
+[3, 2, 3, 0]  oooooooooo oooooooooo ooo+ooo+oo oo++oooo++ oooooooooo oo+o+ooo+o o+oo+oo+oo o+o+++oo++ o+
+[0, 3, 3, 0]  oooooooooo oooooooooo o+o+oo+oo+ o++ooo+o++ ooooo+ooo+ +o+o+o++++ ++o++oo+++ o+++++++++ ++
+[1, 3, 3, 0]  oooooooooo oooooooooo oooooo+ooo o+oooo+ooo oooooooooo oooo+o+ooo +oo+oooo++ o+++oo+++o ++
+[2, 3, 3, 0]  oooooooooo oooooooooo ooo+oooooo o+oooooo+o oooooooooo oo+o+ooo+o o+oo+oo+oo o+o+++o+++ o+
+[3, 3, 3, 0]  oooooooooo oooooooooo ooo+oo+oo+ +++++o+o++ ooooooooo+ +o+o+o++++ ++o++oo+++ o+++++++++ ++
+[0, 0, 0, 1]  oooooooooo oooooooooo oooo+o+ooo ++o+++++oo o+ooo+oooo +o++++++oo +oo+o+++++ ++++++++++ ++
+[1, 0, 0, 1]  +ooooooooo oooooooooo o+oo+o+oo+ +++o+++ooo o+oooooooo +o++++++oo +oo+o+++++ ++++++++++ ++
+[2, 0, 0, 1]  oooooooooo oooooooooo ooooooooo+ ++o+ooo+oo o+oooooooo +o+oo+oooo +ooooo+ooo +++o+oo+o+ ++
+[3, 0, 0, 1]  oooooooooo oooooooooo oooooo+ooo o+oooo+ooo oooooooooo oooo+o+ooo +oo+oooo++ o+++oo+++o ++
+[0, 1, 0, 1]  +ooooooooo oooooooooo o+oo+o+++o +oo+++++oo o++oo++ooo +o++++++oo +oo+o+++++ ++++++++++ ++
+[1, 1, 0, 1]  oooooooooo oooooooooo oooo+o+o+o +o+o+++ooo o++ooo+ooo +o++++++oo +oo+o+++++ ++++++++++ ++
+[2, 1, 0, 1]  oooooooooo oooooooooo ooooooo++o +oo+ooo+oo o++ooo+ooo +o++o++ooo +oooo++o+o +++o+o++o+ ++
+[3, 1, 0, 1]  oooooooooo oooooooooo oooooo+o+o oooooo+ooo oo+ooo+ooo ooo++o+ooo +oo+o+oo++ o+++oo+o+o ++
+[0, 2, 0, 1]  oooooooooo oooooooooo oooooooooo +oo+ooo+oo o+ooo+oooo +o+oo+o+oo +ooooo++oo +++o+oo+o+ ++
+[1, 2, 0, 1]  oooooooooo oooooooooo oooooooooo +o+ooooooo o+oooooooo +o+oo+oooo +ooooo+ooo +++o+oo+++ ++
+[2, 2, 0, 1]  oooooooooo oooooooooo oooo+ooooo +oo++oo+oo o+oooooooo +o+oo+oooo +ooooo+ooo +++o+oo+o+ ++
+[3, 2, 0, 1]  +ooooooooo oooooooooo o+oo+ooooo oooooooooo oooooooooo oooooooooo oooooooooo oooooooooo o+
+[0, 3, 0, 1]  oooooooooo oooooooooo oooooo+++o ooo+oo++oo oo+oo+oooo +o+o+o++oo +oo+ooo+++ o+++oo+o++ ++
+[1, 3, 0, 1]  oooooooooo oooooooooo oooooo+o++ oo+ooo+ooo oo+ooooooo oooo+o+ooo +oo+oooo++ o+++oo+o+o ++
+[2, 3, 0, 1]  +++ooooooo oooooooooo o+oo+oo+++ ooo+ooo+oo oo+ooooooo oo+ooo+ooo oooooooooo oooooo+oo+ o+
+[3, 3, 0, 1]  oooooooooo oooooooooo oooo+o+o+o oooo+o+ooo oo+ooooooo oooo+o+ooo +oo+oooo++ o+++oo+o+o ++
+[0, 0, 1, 1]  oooooooooo oooooooooo o+oo+++ooo +ooo+++ooo o+ooo+oooo +o++++++oo +oo+o+++++ ++++++++++ ++
+[1, 0, 1, 1]  oooooooooo oooooooooo ooo++++ooo +o+++++ooo o+oooooooo +o++++++oo +oo+o+++++ ++++++++++ ++
+[2, 0, 1, 1]  oooooooooo oooooooooo ooooo+oooo +ooooooooo o+oooooooo +o+oo+oooo +ooooo+ooo +++o++o+o+ ++
+[3, 0, 1, 1]  oooooooooo oooooooooo ooooo++ooo oooooo+ooo oooooooooo oooo+o+ooo +oo+oooo++ o+++o++o+o ++
+[0, 1, 1, 1]  oooooooooo oooooooooo oo+o+++o+o ++oo+++ooo +++oo++o+o +o++++++oo +oo+o+++++ ++++++++++ ++
+[1, 1, 1, 1]  oooooooooo oooooooooo o+++++++++ +++++++ooo +++ooo+o++ ++++++++++ ++++++++++ ++++++++++ ++
+[2, 1, 1, 1]  oooooooooo oooooooooo oo+oo+oo++ ++oooooooo +++ooo+o+o ++++o++o++ +o+o+++o+o ++++++++++ ++
+[3, 1, 1, 1]  oooooooooo oooooooooo oo+oo++++o o+oooo+ooo +o+ooo+o++ ooo++++o++ ++++o+oo++ ++++++++++ ++
+[0, 2, 1, 1]  oooooooooo oooooooooo oo+oo+oooo ++oooooooo ++ooo+oo+o +o+oo+o+oo +ooooo++oo +++o++o+o+ ++
+[1, 2, 1, 1]  oooooooooo oooooooooo oo++o+ooo+ ++++oooooo ++oooooo+o ++++o++o++ +o+o+++o+o ++++++++++ ++
+[2, 2, 1, 1]  oo+ooooooo oooooooooo o++o++ooo+ ++oo+ooooo ++oooooo+o ++++o++o++ +o+o+++o+o ++++++++++ ++
+[3, 2, 1, 1]  oooooooooo oooooooooo oo+o++oooo o+oooooooo +ooooooo+o ooooo++o++ oo+oo+oooo oo++++++oo o+
+[0, 3, 1, 1]  oooooooooo oooooooooo oo+oo++o+o oooooo+ooo oo+oo+oo+o oooo+o++oo +oo+ooo+++ o+++o++o+o ++
+[1, 3, 1, 1]  oooooooooo oooooooooo oo++o++++o oo++oo+ooo oo+ooooo++ ooo++++o++ ++++o+oo++ ++++++++++ ++
+[2, 3, 1, 1]  oooooooooo oooooooooo oo+o++oo+o oooooooooo oo+ooooo+o ooooo++o++ oo+oo+oooo oo++++++oo o+
+[3, 3, 1, 1]  o+oooooooo oooooooooo o++o+++++o oooo+o+ooo oo+ooooo++ ooo++++o++ ++++o+oo++ ++++++++++ ++
+[0, 0, 2, 1]  oooooooooo oooooooooo oooooo+ooo +oo+++++oo o+o+o+oooo +++oo+o+oo +ooooo+oo+ +++o+oo+o+ ++
+[1, 0, 2, 1]  oooooooooo oooooooooo oooooo+ooo +o+o+++ooo o+o+oooooo +++oo+oooo +ooo+o+ooo +++o+oo+++ ++
+[2, 0, 2, 1]  oooooooooo oooooooooo oooooooooo +oo+ooo+oo o+o+oooooo +++oo+oooo +ooo+o+ooo +++o+oo+o+ ++
+[3, 0, 2, 1]  oooooooooo oooooooooo o+oooo+ooo oooooo+ooo ooo+oooooo o+oooooooo oooooooooo oooo+ooooo o+
+[0, 1, 2, 1]  oooooo+ooo oooooooooo oo+ooo+++o ++o+++++oo ++++o++o+o ++++o+++oo +o+oo++o++ +++o+o++o+ ++
+[1, 1, 2, 1]  oooooooooo oooooooooo oo+ooo+o++ +++o+++ooo ++++oo+o+o ++++o++o++ +o+o+++o+o ++++++++++ ++
+[2, 1, 2, 1]  oo+ooooooo oooooooooo o++oooo+++ ++o+ooo+oo ++++oo+o+o ++++o++o++ +o+o+++o+o ++++++++++ ++
+[3, 1, 2, 1]  oooooooooo oooooooooo oo+ooo+o+o o+oooo+ooo +o++oo+o+o o+o+o++o++ oo+oo+oo+o oo++++++oo o+
+[0, 2, 2, 1]  oooooooooo oooooooooo oo+ooooooo ++o+ooo+oo ++o+o+oo+o +++oo+o+oo +o+ooo+ooo +++o+oo+o+ ++
+[1, 2, 2, 1]  oooooooooo oooooooooo o++oooooo+ +++ooooooo ++o+oooo+o ++++o++o++ +o+o+++o+o ++++++++++ ++
+[2, 2, 2, 1]  oooooooooo oooooooooo oo+oooooo+ ++o++oo+oo ++o+oooo+o ++++o++o++ +o+o+++o+o ++++++++++ ++
+[3, 2, 2, 1]  oooooooooo oooooooooo oo+ooooooo o+oooooooo +oo+oooo+o o+ooo++o++ oo+oo++ooo oo++++++oo o+
+[0, 3, 2, 1]  o+oooo+ooo oooooooooo o++ooo+++o ooo+oo++oo oo++o+oo+o o++ooo++oo oo+oooooo+ o+oo+o+oo+ o+
+[1, 3, 2, 1]  oooooooooo oooooooooo oo+ooo+o+o oo+ooo+ooo oo++oooo+o o+ooo++o++ oo+o++oooo oo+++++++o o+
+[2, 3, 2, 1]  oooooooooo oooooooooo oo+oooo++o ooo+ooo+oo oo++oooo+o o++oo++o++ oo+o+++ooo oo++++++o+ o+
+[3, 3, 2, 1]  oooooooooo oooooooooo oo+ooo+o+o oooo+o+ooo oo++oooo+o o+ooo++o++ oo+oo++ooo oo++++++oo ++
+[0, 0, 3, 1]  oooooooooo oooooooooo oooooo+ooo oooo+++ooo ooooo+oooo +ooo+o++oo +oo+oooo++ o+++oo+o+o ++
+[1, 0, 3, 1]  oooooooooo oooooooooo oooooo+oo+ oo+o+++ooo oooooooooo oooo+o+ooo +oo+oooo++ o+++oo+o+o ++
+[2, 0, 3, 1]  oo+ooooooo oooooooooo o+ooooooo+ oooooooooo oooooooooo oooooooooo oooooooooo oooooooooo o+
+[3, 0, 3, 1]  oooooooooo oooooooooo oooooo+ooo ooo+oo+ooo oooooooooo oooo+o+ooo +oo+oooo++ o+++oo+o++ ++
+[0, 1, 3, 1]  oooooooooo oooooooooo oo+ooo+o+o oooo+++ooo oo+oo++o+o ooo++o++oo +oo+o+oo++ o+++oo+o+o ++
+[1, 1, 3, 1]  oooooooooo oooooooooo oo+ooo+++o oo+o+++ooo oo+ooo+o++ ooo++++o++ ++++o+oo++ ++++++++++ ++
+[2, 1, 3, 1]  oooooooooo oooooooooo oo+ooooo+o oooooooooo oo+ooo+o+o ooo+o++o++ oo+oo+oo+o oo++++++oo o+
+[3, 1, 3, 1]  oooooooooo oooooooooo o++ooo+++o ooo+oo+ooo oo+ooo+o++ ooo++++o++ ++++o+oo++ ++++++++++ ++
+[0, 2, 3, 1]  oooooooooo oooooooooo o++ooooooo oooooooooo ooooo+oo+o ooooooo+oo oooooooooo o+oooooooo o+
+[1, 2, 3, 1]  oooooooooo oooooooooo oo+ooooooo oo+ooooooo oooooooo+o ooooo++o++ oo+oo+oooo oo+++++++o o+
+[2, 2, 3, 1]  oooooooooo oooooooooo oo+ooooooo oooo+ooooo oooooooo+o ooooo++o++ oo+oo+oooo oo++++++oo ++
+[3, 2, 3, 1]  oooooooooo oooooooooo oo+ooooooo ooo+oooooo oooooooo+o ooooo++o++ oo+oo+oooo oo++++++o+ o+
+[0, 3, 3, 1]  oooooooooo oooooooooo oo+ooo+o+o o+oooo+ooo oo+oo+oo+o +ooo+o++oo +oo+oooo++ o+++oo+++o ++
+[1, 3, 3, 1]  o+oooooooo oooooooooo o++ooo++++ o++ooo+ooo oo+ooooo++ ooo++++o++ ++++o+oo++ ++++++++++ ++
+[2, 3, 3, 1]  oooooooooo oooooooooo oo+ooooo++ o+oooooooo oo+ooooo+o ooooo++o++ oo+oo+oooo oo++++++oo o+
+[3, 3, 3, 1]  oooooooooo oooooooooo oo+ooo+++o ++o++o+ooo oo+ooooo++ ooo++++o++ ++++o+oo++ ++++++++++ ++
+[0, 0, 0, 2]  oooooooooo oooooooooo ooo+ooo+oo ++o+++o++o o+ooo+oooo +++o++o++o +++o+o++o+ ++++++++++ ++
+[1, 0, 0, 2]  oooooooooo oooooooooo ooooooooo+ ++oo++oooo o+oooooooo +o+oo+oooo +ooooo+ooo +++o+oo+o+ ++
+[2, 0, 0, 2]  o+oooooooo oooooooooo o+o+ooo+o+ ++++ooo++o o+oooooooo +++o++o++o +++o+o++o+ ++++++++++ ++
+[3, 0, 0, 2]  oooooooooo oooooooooo ooo+oooooo o+oooooo+o oooooooooo oo+o+ooo+o o+oo+oo+oo o+o+++o+++ o+
+[0, 1, 0, 2]  oooooooooo oooooooooo ooo+oooooo +oo+++o++o o+ooo++ooo +o++o+o+oo +ooooo++oo +++o+oo+o+ ++
+[1, 1, 0, 2]  oooooooooo oooooooooo oooooooooo +ooo++oooo o+oooo+ooo +o++o+oooo +ooooo+o+o +++o+oo+o+ ++
+[2, 1, 0, 2]  oooooooooo oooooooooo ooo+oooooo +o++ooo++o o+oooo+ooo +o++o+oooo +ooooo+o+o +++o+oo+++ ++
+[3, 1, 0, 2]  oooooooooo oooooooooo o+o+oooooo oooooooo+o oooooo+ooo ooo+oooooo oooooooooo oo+ooooooo o+
+[0, 2, 0, 2]  oooooooooo oooooooooo o+o+ooo++o +oo+ooo++o o+ooo+oooo +++o++o++o +++o+o++o+ ++++++++++ ++
+[1, 2, 0, 2]  oooooooooo oooooooooo oooooooo+o +ooooooooo o+oooooooo +o+oo+oooo +ooooo+ooo +++o+o++o+ ++
+[2, 2, 0, 2]  oooooooooo oooooooooo ooo+oo+++o +o+++oo++o o+oooooooo +++o++o++o +++o+o++o+ ++++++++++ ++
+[3, 2, 0, 2]  oooooooooo oooooooooo ooo+oooo+o oooooooo+o oooooooooo oo+o+ooo+o o+oo+oo+oo o+o++++o++ o+
+[0, 3, 0, 2]  oooooooooo oooooooooo ooo+oooooo ooo+ooo++o ooooo+oooo +o+o+oo++o o+oo+oo+oo o+o+++oo++ o+
+[1, 3, 0, 2]  oo+ooooooo oooooooooo o+ooooooo+ oooooooooo oooooooooo oooooooooo oooooooooo oooooooooo o+
+[2, 3, 0, 2]  oooooooooo oooooooooo ooo+ooooo+ oo++ooo++o oooooooooo oo+o+ooo+o o+oo+oo+oo o+o+++oo++ o+
+[3, 3, 0, 2]  oooooooooo oooooooooo ooo+oooooo oooo+ooo+o oooooooooo oo+o+ooo+o o+oo+oo+oo o+o+++oo++ ++
+[0, 0, 1, 2]  oooooooooo oooooooooo oooooooooo +ooo++oooo o+ooo+oooo +o+oo+o+oo +ooooo+oo+ +++o+oo+o+ ++
+[1, 0, 1, 2]  oooooooooo oooooooooo ooooooo+oo +oo+++oooo o+oooooooo +o+oo+oooo +ooooo+ooo +++o+oo+o+ ++
+[2, 0, 1, 2]  oooooooooo oooooooooo oooooooooo +o+ooooooo o+oooooooo +o+oo+oooo +ooooo+ooo +++o+oo+++ ++
+[3, 0, 1, 2]  o+oooooooo oooooooooo o+ooooo+oo oooooooooo oooooooooo oooooooooo oooooooooo oooooooooo o+
+[0, 1, 1, 2]  oooooooooo oooooooooo oo+ooooooo ++oo++oooo ++ooo++o+o +o++o+o+oo +oooo++ooo +++o+oo+o+ ++
+[1, 1, 1, 2]  oooooooooo oooooooooo oo+oooooo+ ++o+++oooo ++oooo+o+o ++++o++o++ +o+o+++o+o ++++++++++ ++
+[2, 1, 1, 2]  oooooooooo oooooooooo o++oooooo+ +++ooooooo ++oooo+o+o ++++o++o++ +o+o+++o+o ++++++++++ ++
+[3, 1, 1, 2]  oooooooooo oooooooooo oo+ooooooo o+oooooooo +ooooo+o+o ooo+o++o++ oo+oo+oooo +o++++++oo o+
+[0, 2, 1, 2]  oooooooooo oooooooooo oo+ooooo+o ++oooooooo ++ooo+oo+o +o+oo+o+oo +ooooo+oo+ +++o+o++o+ ++
+[1, 2, 1, 2]  oo+ooooooo oooooooooo o++oooo+++ ++o+oooooo ++oooooo+o ++++o++o++ +o+o+++o+o ++++++++++ ++
+[2, 2, 1, 2]  oooooooooo oooooooooo oo+ooo+o++ +++o+ooooo ++oooooo+o ++++o++o++ +o+o+++o+o ++++++++++ ++
+[3, 2, 1, 2]  oooooooooo oooooooooo oo+oooo++o o+oooooooo +ooooooo+o ooooo++o++ oo+oo+oooo oo++++++oo o+
+[0, 3, 1, 2]  oooooooooo oooooooooo o++ooooooo oooooooooo ooooo+oo+o ooooooo+oo oooooooooo o+oooooooo o+
+[1, 3, 1, 2]  oooooooooo oooooooooo oo+ooooooo ooo+oooooo oooooooo+o ooooo++o++ oo+oo+oooo oo++++++o+ o+
+[2, 3, 1, 2]  oooooooooo oooooooooo oo+ooooooo oo+ooooooo oooooooo+o ooooo++o++ oo+oo+oooo oo+++++++o o+
+[3, 3, 1, 2]  oooooooooo oooooooooo oo+ooooooo oooo+ooooo oooooooo+o ooooo++o++ oo+oo+oooo oo++++++oo ++
+[0, 0, 2, 2]  o+oooooooo oooooooooo o+o+++o+oo +oo+++o++o o+o+o+o+oo +++o++o++o +++o+o++o+ ++++++++++ ++
+[1, 0, 2, 2]  oooooooooo oooooooooo oooo++oooo +ooo++oooo o+o+ooo+oo +++oo+oo+o +o+o+o+ooo +++o++o+o+ ++
+[2, 0, 2, 2]  oooooooooo oooooooooo ooo+o+o+oo +o++ooo++o o+o+ooo+oo +++o++o++o +++o+o++o+ ++++++++++ ++
+[3, 0, 2, 2]  oooooooooo oooooooooo ooo+o+oooo oooooooo+o ooo+ooo+oo o++o+ooo+o o++o+oo+oo o+o+++oo++ o+
+[0, 1, 2, 2]  ooooooooo+ oooooooooo oo++++oooo ++o+++o++o ++o+o++++o ++++o+o++o +o+o++++oo +++o++o+o+ ++
+[1, 1, 2, 2]  oo+ooooooo oooooooooo o++o++ooo+ ++oo++oooo ++o+oo+++o ++++o++o++ +o+o+++o+o ++++++++++ ++
+[2, 1, 2, 2]  oooooooooo oooooooooo oo++o+ooo+ ++++ooo++o ++o+oo+++o ++++o++o++ +o+o+++o+o ++++++++++ ++
+[3, 1, 2, 2]  oooooooooo oooooooooo oo++o+oooo o+oooooo+o +oo+oo+++o o+o+o++o++ oo+o++oooo oo++++++oo o+
+[0, 2, 2, 2]  oooooooooo oooooooooo oo++o+o++o ++o+ooo++o ++o+o+o++o +++o++o++o +++o+o++o+ ++++++++++ ++
+[1, 2, 2, 2]  oooooooooo oooooooooo oo+oo+oo++ ++oooooooo ++o+ooo++o ++++o++o++ +o+o+++o+o ++++++++++ ++
+[2, 2, 2, 2]  oooooooooo oooooooooo o+++++++++ +++++oo++o ++o+ooo+++ ++++++++++ ++++++++++ ++++++++++ ++
+[3, 2, 2, 2]  oooooooooo oooooooooo oo++++oo+o o+oooooo+o +oo+ooo+++ o++o+++o++ o+++++++oo o+++++++++ ++
+[0, 3, 2, 2]  oooooooooo oooooooooo oo++o+oooo ooo+ooo++o ooo+o+o++o o++o+oo++o o++o+oo+oo o+o+++oo++ o+
+[1, 3, 2, 2]  oooooooooo oooooooooo oo+oo+oooo oooooooooo ooo+ooo++o o+ooo++o++ oo+o++oooo oo++++++oo o+
+[2, 3, 2, 2]  oooooooooo oooooooooo oo++++oooo oo++ooo++o ooo+ooo+++ o++o+++o++ o+++++++oo o+++++++++ ++
+[3, 3, 2, 2]  oooooooooo oooooooooo o+++++oooo oooo+ooo+o ooo+ooo+++ o++o+++o++ o+++++++oo o+++++++++ ++
+[0, 0, 3, 2]  oooooooooo oooooooooo ooo+++oooo oooo++oo+o ooooo+o+oo +o+o+oo++o ++oo+oo+o+ o+o+++oo++ ++
+[1, 0, 3, 2]  +++ooooooo oooooooooo o+oo++o+o+ oooo++oooo ooooooo+oo oooooooo+o +ooooooooo ooooo+oooo ++
+[2, 0, 3, 2]  oooooooooo oooooooooo ooo+o+ooo+ oo+ooooo+o ooooooo+oo oo+o+ooo+o o+oo+oo+oo o+o+++oo++ o+
+[3, 0, 3, 2]  oooooooooo oooooooooo ooo+o+o+oo ooo+oooo+o ooooooo+oo oo+o+ooo+o o+oo+oo+oo o+o+++oo++ o+
+[0, 1, 3, 2]  +oooooooo+ oooooooooo o+++++oooo oooo++oo+o ooooo++++o ooo+ooo++o +oooo+o+oo o++oo+oooo ++
+[1, 1, 3, 2]  oooooooooo oooooooooo oo+o++oooo oooo++oooo oooooo+++o ooo+o++o++ +o+oo+oo+o +o++++++oo ++
+[2, 1, 3, 2]  oooooooooo oooooooooo oo++o+oooo oo+ooooo+o oooooo+++o ooo+o++o++ oo+oo+oo+o oo+++++++o o+
+[3, 1, 3, 2]  oooooooooo oooooooooo oo++o+oooo ooo+oooo+o oooooo+++o ooo+o++o++ oo+oo+oooo +o++++++o+ o+
+[0, 2, 3, 2]  oooooooooo oooooooooo oo++o+oo+o oooooooo+o ooooo+o++o oo+o+oo++o o+oo+oo+o+ o+o++++o++ o+
+[1, 2, 3, 2]  oooooooooo oooooooooo oo+oo+o++o oooooooooo ooooooo++o ooooo++o++ oo+oo+oooo oo++++++oo o+
+[2, 2, 3, 2]  oooooooooo oooooooooo oo+++++o+o oo+o+ooo+o ooooooo+++ o++o+++o++ o+++++++oo o+++++++++ ++
+[3, 2, 3, 2]  +ooooooooo oooooooooo o+++++o++o ooo+oooo+o ooooooo+++ o++o+++o++ o+++++++oo o+++++++++ ++
+[0, 3, 3, 2]  oooooooooo oooooooooo oo++o+oooo o+oooooo+o ooooo+o++o +o+o+oo++o o+oo+oo+oo o+o+++o+++ o+
+[1, 3, 3, 2]  oooooooooo oooooooooo oo+oo+ooo+ o+oooooooo ooooooo++o ooooo++o++ oo+oo+oooo oo++++++oo o+
+[2, 3, 3, 2]  +ooooooooo oooooooooo o+++++ooo+ o++ooooo+o ooooooo+++ o++o+++o++ o+++++++oo o+++++++++ ++
+[3, 3, 3, 2]  oooooooooo oooooooooo oo++++oooo ++o++ooo+o ooooooo+++ o++o+++o++ o+++++++oo o+++++++++ ++
+[0, 0, 0, 3]  oooooooooo oooooooooo ooo+oo+oo+ ++++++++++ o+oo++ooo+ +o+o+o++++ ++o++oo+++ o+++++++++ ++
+[1, 0, 0, 3]  oooooooooo oooooooooo oooooo+ooo ++oo+++ooo o+oo+oooo+ oooo+o+oo+ +oo+oooo++ o+++oo+++o ++
+[2, 0, 0, 3]  oooooooooo oooooooooo ooo+oooooo ++o+ooo++o o+oo+oooo+ oo+o+ooo++ o+oo+oo+oo o+o+++o+++ o+
+[3, 0, 0, 3]  oooooooooo oooooooooo o+o+oo+oo+ o++ooo+o++ oooo+oooo+ +o+o+o++++ ++o++oo+++ o+++++++++ ++
+[0, 1, 0, 3]  oooooooooo ooo+oooooo ooo+oo+++o +o++++++++ o++o+++oo+ +o+++o++oo ++o+ooo+++ ++++oo+o++ ++
+[1, 1, 0, 3]  oooooooooo oooooooooo oooooo+o+o +ooo+++ooo o++o+o+oo+ ooo++o+ooo +oo+oooo++ ++++oo+o+o ++
+[2, 1, 0, 3]  o+oooooooo ooo+oooooo o+o+ooo++o +oo+ooo++o o++o+o+oo+ oo++oo+ooo o+oooooooo +o++oo+oo+ o+
+[3, 1, 0, 3]  oooooooooo oooooooooo ooo+oo+o+o oo+ooo+o++ oo+o+o+oo+ ooo++o+ooo ++o+oooo++ o+++oo+o+o ++
+[0, 2, 0, 3]  oooooooooo oooooooooo ooo+oooooo +o++ooo+++ o+oo++ooo+ +o+o+oo++o o+oo+oo+oo o+o+++oo++ o+
+[1, 2, 0, 3]  oooooooooo oooooooooo o+oooooooo +ooooooooo o+oo+oooo+ oooooooooo oooooooooo ooo+oooooo o+
+[2, 2, 0, 3]  oooooooooo oooooooooo ooo+oooooo +oo++oo++o o+oo+oooo+ oo+o+ooo+o o+o++oo+oo o+o+++oo++ ++
+[3, 2, 0, 3]  oooooooooo oooooooooo ooo+oooooo oo+ooooo++ oooo+oooo+ oo+o+ooo+o o+o++oo+oo o+o+++oo++ o+
+[0, 3, 0, 3]  oo+ooooooo oooooooooo o+o+oo++++ oo++oo++++ oo+o++ooo+ +o+o+o++++ ++o++oo+++ o+++++++++ ++
+[1, 3, 0, 3]  oooooooooo oooooooooo oooooo+o+o oooooo+ooo oo+o+oooo+ oooo+o+oo+ +oo+oooo++ o+++oo+o+o ++
+[2, 3, 0, 3]  oooooooooo oooooooooo ooo+ooo++o ooo+ooo++o oo+o+oooo+ oo+o+o+o++ o+o++oo+oo o+o++++o++ o+
+[3, 3, 0, 3]  oooooooooo oooooooooo ooo+oo+o++ oo+o+o+o++ oo+o+oooo+ +o+o+o++++ ++o++oo+++ o+++++++++ ++
+[0, 0, 1, 3]  oooooooooo oooooooooo oooooo+ooo +o+o+++oo+ o+oo++ooo+ +ooo+o++oo +oo+oooo++ o+++oo+o+o ++
+[1, 0, 1, 3]  oooooooooo oooooooooo oooooo+ooo +oo++++ooo o+oo+oooo+ oooo+o+ooo ++o+oooo++ o+++oo+o++ ++
+[2, 0, 1, 3]  oooooooooo oooooooooo o+oooooooo +ooooooooo o+oo+oooo+ oooooooooo oooooooooo ooo+oooooo o+
+[3, 0, 1, 3]  oooooooooo oooooooooo oooooo+ooo oo+ooo+oo+ oooo+oooo+ oooo+o+ooo ++o+oooo++ o+++oo+o+o ++
+[0, 1, 1, 3]  ooo+oooooo oooooooooo oo+ooo+o++ +++o+++oo+ +++o+++o++ +oo+++++o+ +oo+o+oo++ ++++oo+++o ++
+[1, 1, 1, 3]  oooooooooo oooooooooo oo+ooo+++o ++o++++ooo +++o+o+o++ ooo++++o++ ++++o+oo++ ++++++++++ ++
+[2, 1, 1, 3]  oooooooooo oooooooooo oo+ooooo+o ++oooooooo +++o+o+o++ ooo+o++o++ oo+oo+oooo +o++++++oo o+
+[3, 1, 1, 3]  o+oooooooo oooooooooo o++ooo++++ o++ooo+oo+ +o+o+o+o++ ooo++++o++ ++++o+oo++ ++++++++++ ++
+[0, 2, 1, 3]  oo++oooooo oooooooooo o++oooooo+ +++oooooo+ ++oo++oo++ +ooo++o+o+ oooooooooo o+o+ooo++o o+
+[1, 2, 1, 3]  oooooooooo oooooooooo oo+ooooooo ++o+oooooo ++oo+ooo++ ooooo++o++ o++oo+oooo oo++++++o+ o+
+[2, 2, 1, 3]  oooooooooo oooooooooo oo+ooooooo ++oo+ooooo ++oo+ooo++ ooooo++o++ oo++o+oooo oo++++++oo ++
+[3, 2, 1, 3]  oooooooooo oooooooooo oo+oooooo+ o++oooooo+ +ooo+ooo++ oooo+++o++ o+++o+oooo oo+++++++o o+
+[0, 3, 1, 3]  oooooooooo oooooooooo oo+ooo+o+o oo+ooo+oo+ oo+o++oo++ oooo+o++o+ +oo+oooo++ o+++oo+o+o ++
+[1, 3, 1, 3]  oooooooooo oooooooooo o++ooo+++o ooo+oo+ooo oo+o+ooo++ ooo++++o++ ++++o+oo++ ++++++++++ ++
+[2, 3, 1, 3]  oooooooooo oooooooooo oo+ooooo+o oooooooooo oo+o+ooo++ ooooo++o++ oo++o+oooo oo++++++oo o+
+[3, 3, 1, 3]  oooooooooo oooooooooo oo+ooo+++o oo+o+o+oo+ oo+o+ooo++ ooo++++o++ ++++o+oo++ ++++++++++ ++
+[0, 0, 2, 3]  oooooooooo ooooooooo+ ooo++++ooo +o++++++++ o+o+++o+o+ +++o+oo++o ++o++o++o+ o+o+++oo++ ++
+[1, 0, 2, 3]  +ooooooooo ooooooooo+ o+oo+++ooo +ooo+++ooo o+o++oo+o+ o+oooooo+o +oo+oo+ooo ooo+++oooo ++
+[2, 0, 2, 3]  oooooooooo oooooooooo ooo+o+oooo +oo+ooo++o o+o++oo+o+ o++o+ooo+o o+oo+o++oo o+o+++oo++ o+
+[3, 0, 2, 3]  oooooooooo oooooooooo ooo+o++ooo oo+ooo+o++ ooo++oo+o+ o++o+ooo+o o+o++oo+oo o+o+++oo++ o+
+[0, 1, 2, 3]  ++++++++++ ++++++++++ ++++++++++ ++++++++++ ++++++++++ ++++++++++ ++++++++++ ++++++++++ ++
+[1, 1, 2, 3]  oooooooooo ooooooooo+ oo+o+++o+o ++oo+++ooo +++++o++++ o+o+o++o++ +o++o++o+o +o++++++oo ++
+[2, 1, 2, 3]  oooooooooo ooo+oooooo oo++o+o++o ++o+ooo++o +++++o++++ o+++o++o++ o++o+++ooo +o++++++o+ o+
+[3, 1, 2, 3]  oooooooooo ooooo+oooo oo++o++o++ o++ooo+o++ +o+++o++++ o+o++++o++ o+++++oo+o oo+++++++o o+
+[0, 2, 2, 3]  ooo+oooooo oooooooooo oo++o+ooo+ ++++ooo+++ ++o+++o+++ +++o++o+++ o++o+o++oo o+o+++o+++ o+
+[1, 2, 2, 3]  oooooooooo oooooooooo oo+oo+oooo ++oooooooo ++o++oo+++ o+ooo++o++ oo+oo++ooo oo++++++oo o+
+[2, 2, 2, 3]  oooooooooo oooooooooo oo++++oooo ++o++oo++o ++o++oo+++ o++o+++o++ o+++++++oo o+++++++++ ++
+[3, 2, 2, 3]  +ooooooooo oooooooooo o+++++ooo+ o++ooooo++ +oo++oo+++ o++o+++o++ o+++++++oo o+++++++++ ++
+[0, 3, 2, 3]  oooooo+ooo oooooooooo oo++o++++o oo++oo++++ oo++++o+++ o++o+o++++ o++++oo+o+ o+o++++o++ o+
+[1, 3, 2, 3]  oooooooooo oooooooooo oo+oo++o+o oooooo+ooo oo+++oo+++ o+ooo++o++ oo++o+oooo oo++++++oo o+
+[2, 3, 2, 3]  +ooooooooo oooooooooo o+++++o++o ooo+ooo++o oo+++oo+++ o++o+++o++ o+++++++oo o+++++++++ ++
+[3, 3, 2, 3]  oooooooooo oooooooooo oo+++++o+o oo+o+o+o++ oo+++oo+++ o++o+++o++ o+++++++oo o+++++++++ ++
+[0, 0, 3, 3]  oo+ooooooo oooooooooo o+o++++oo+ oo+o+++o++ oooo++o+o+ +o+o+o++++ ++o++oo+++ o+++++++++ ++
+[1, 0, 3, 3]  oooooooooo oooooooooo oooo+++ooo oooo+++ooo oooo+oo+o+ oooo+o+o++ ++o+oooo++ o+++o++o+o ++
+[2, 0, 3, 3]  oooooooooo oooooooooo ooo+o+oooo oooooooo+o oooo+oo+o+ oo+o+ooo++ o+oo+oo+oo o+o+++oo++ o+
+[3, 0, 3, 3]  oooooooooo oooooooooo ooo+o++oo+ oo++oo+o++ oooo+oo+o+ +o+o+o++++ ++o++oo+++ o+++++++++ ++
+[0, 1, 3, 3]  ooooooooo+ oooooooooo oo+++++o+o oo+o+++o++ oo+o++++++ ooo++o++++ ++o+o+o+++ o+++o++o+o ++
+[1, 1, 3, 3]  o+oooooooo oooooooooo o++o+++++o oooo+++ooo oo+o+o++++ ooo++++o++ ++++o+oo++ ++++++++++ ++
+[2, 1, 3, 3]  oooooooooo oooooooooo oo++o+oo+o oooooooo+o oo+o+o++++ ooo+o++o++ o++oo+oooo oo++++++oo o+
+[3, 1, 3, 3]  oooooooooo oooooooooo oo++o++++o oo++oo+o++ oo+o+o++++ ooo++++o++ ++++o+oo++ ++++++++++ ++
+[0, 2, 3, 3]  oooooooooo oooooooooo oo++o+oooo oo+ooooo++ oooo++o+++ oo+o+oo+++ o+oo+oo+oo o+o+++oo++ o+
+[1, 2, 3, 3]  oooooooooo oooooooooo oo+oo+oooo oooooooooo oooo+oo+++ ooooo++o++ o++oo+oooo oo++++++oo o+
+[2, 2, 3, 3]  oooooooooo oooooooooo o+++++oooo oooo+ooo+o oooo+oo+++ o++o+++o++ o+++++++oo o+++++++++ ++
+[3, 2, 3, 3]  oooooooooo oooooooooo oo++++oooo oo++oooo++ oooo+oo+++ o++o+++o++ o+++++++oo o+++++++++ ++
+[0, 3, 3, 3]  oooooooooo oooooooooo oo++o++o++ o++ooo+o++ oo+o++o+++ +o+o+o++++ ++o++oo+++ o+++++++++ ++
+[1, 3, 3, 3]  oooooooooo oooooooooo oo+oo++++o o+oooo+ooo oo+o+oo+++ ooo++++o++ ++++o+oo++ ++++++++++ ++
+[2, 3, 3, 3]  oooooooooo oooooooooo oo++++oo+o o+oooooo+o oo+o+oo+++ o++o+++o++ o+++++++oo o+++++++++ ++
+[3, 3, 3, 3]  oooooooooo oooooooooo o+++++++++ +++++o+o++ oo+o+oo+++ ++++++++++ ++++++++++ ++++++++++ ++
+
+Список предикатов, описывающих предполные классы
+Класс Р
+#1
+[[1, 0], [0, 1], [3, 2], [2, 3]]
+#2
+[[3, 1], [2, 0], [0, 2], [1, 3]]
+#3
+[[3, 0], [2, 1], [1, 2], [0, 3]]
+Класс O
+#4
+[[0, 2], [0, 1], [2, 3], [1, 3], [0, 3]]
+#5
+[[0, 2], [0, 1], [2, 3], [1, 3], [1, 2], [0, 3]]
+#6
+[[0, 2], [0, 1], [1, 3], [3, 2], [1, 2], [0, 3]]
+#7
+[[0, 2], [0, 1], [3, 2], [1, 2], [0, 3]]
+#8
+[[2, 1], [0, 2], [0, 1], [1, 3], [2, 3], [0, 3]]
+#9
+[[3, 1], [2, 1], [0, 2], [0, 1], [2, 3], [0, 3]]
+#10
+[[3, 1], [2, 1], [0, 2], [0, 1], [0, 3]]
+#11
+[[3, 1], [0, 2], [0, 1], [3, 2], [1, 2], [0, 3]]
+#12
+[[3, 1], [2, 1], [0, 2], [0, 1], [3, 2], [0, 3]]
+#13
+[[0, 2], [1, 0], [2, 3], [1, 3], [1, 2], [0, 3]]
+#14
+[[1, 0], [2, 3], [1, 3], [1, 2], [0, 3]]
+#15
+[[0, 2], [1, 0], [3, 2], [1, 3], [1, 2], [0, 3]]
+#16
+[[0, 2], [1, 0], [3, 2], [1, 3], [1, 2]]
+#17
+[[2, 0], [1, 0], [2, 3], [1, 3], [1, 2], [0, 3]]
+#18
+[[3, 0], [0, 2], [1, 0], [3, 2], [1, 3], [1, 2]]
+#19
+[[2, 0], [2, 1], [0, 1], [1, 3], [2, 3], [0, 3]]
+#20
+[[2, 0], [2, 1], [1, 3], [2, 3], [0, 3]]
+#21
+[[2, 0], [2, 1], [1, 0], [1, 3], [2, 3], [0, 3]]
+Класс L
+#22
+[[3, 0, 2, 1], [3, 1, 1, 3], [1, 0, 3, 2], [2, 0, 2, 0], [0, 2, 1, 3], [2, 1, 2, 1], [0, 1, 1, 0], [1, 2, 0, 3], [2, 1, 1, 2], [2, 3, 2, 3], [0, 3, 2, 1], [2, 0, 1, 3], [3, 3, 0, 0], [0, 0, 1, 1], [1, 0, 2, 3], [3, 1, 2, 0], [1, 3, 0, 2], [1, 1, 0, 0], [3, 0, 3, 0], [0, 2, 0, 2], [3, 2, 2, 3], [0, 1, 0, 1], [1, 0, 0, 1], [1, 0, 1, 0], [1, 3, 3, 1], [3, 3, 3, 3], [2, 1, 0, 3], [2, 3, 3, 2], [0, 3, 3, 0], [0, 0, 0, 0], [3, 2, 3, 2], [2, 0, 0, 2], [3, 1, 3, 1], [0, 1, 3, 2], [0, 3, 0, 3], [1, 1, 1, 1], [1, 2, 3, 0], [1, 1, 3, 3], [0, 2, 3, 1], [2, 2, 0, 0], [2, 2, 3, 3], [2, 3, 0, 1], [3, 3, 2, 2], [1, 2, 2, 1], [0, 0, 3, 3], [1, 3, 2, 0], [0, 1, 2, 3], [3, 2, 0, 1], [0, 3, 1, 2], [3, 0, 1, 2], [0, 2, 2, 0], [1, 1, 2, 2], [2, 0, 3, 1], [2, 2, 1, 1], [2, 1, 3, 0], [3, 1, 0, 2], [2, 2, 2, 2], [2, 3, 1, 0], [3, 3, 1, 1], [1, 3, 1, 3], [1, 2, 1, 2], [3, 0, 0, 3], [0, 0, 2, 2], [3, 2, 1, 0]]
+Класс E
+#23
+[[3, 1], [2, 1], [1, 1], [2, 2], [3, 2], [2, 3], [1, 3], [0, 0], [3, 3], [1, 2]]
+#24
+[[3, 0], [2, 0], [1, 1], [0, 2], [2, 2], [3, 2], [2, 3], [0, 0], [3, 3], [0, 3]]
+#25
+[[1, 1], [2, 2], [1, 0], [0, 1], [3, 2], [2, 3], [0, 0], [3, 3]]
+#26
+[[1, 1], [2, 2], [3, 2], [2, 3], [0, 0], [3, 3]]
+#27
+[[3, 1], [3, 0], [1, 1], [2, 2], [1, 0], [0, 1], [1, 3], [0, 0], [3, 3], [0, 3]]
+#28
+[[3, 1], [2, 0], [1, 1], [0, 2], [2, 2], [1, 3], [0, 0], [3, 3]]
+#29
+[[3, 1], [1, 1], [2, 2], [1, 3], [0, 0], [3, 3]]
+#30
+[[3, 0], [2, 1], [1, 1], [2, 2], [0, 0], [3, 3], [1, 2], [0, 3]]
+#31
+[[2, 0], [2, 1], [1, 1], [0, 2], [2, 2], [1, 0], [0, 1], [0, 0], [3, 3], [1, 2]]
+#32
+[[2, 1], [1, 1], [2, 2], [0, 0], [3, 3], [1, 2]]
+#33
+[[3, 0], [1, 1], [2, 2], [0, 0], [3, 3], [0, 3]]
+#34
+[[2, 0], [1, 1], [0, 2], [2, 2], [0, 0], [3, 3]]
+#35
+[[1, 1], [2, 2], [1, 0], [0, 1], [0, 0], [3, 3]]
+Класс C
+#36
+[[1], [0]]
+#37
+[[3], [1], [0]]
+#38
+[[2], [0]]
+#39
+[[3], [2], [0]]
+#40
+[[3], [0]]
+#41
+[[1], [2]]
+#42
+[[1], [2], [0]]
+#43
+[[3], [1]]
+#44
+[[2]]
+#45
+[[3]]
+#46
+[[0]]
+#47
+[[1]]
+#48
+[[3], [2]]
+#49
+[[3], [1], [2]]
+#50
+[[3, 1], [3, 0], [1, 1], [2, 2], [0, 0], [3, 2], [1, 3], [2, 3], [3, 3], [0, 3]]
+#51
+[[2, 0], [3, 0], [2, 1], [1, 1], [0, 2], [2, 2], [1, 0], [0, 1], [0, 0], [1, 2], [3, 3], [0, 3]]
+#52
+[[2, 0], [1, 1], [2, 1], [0, 2], [2, 2], [0, 0], [3, 2], [2, 3], [3, 3], [1, 2]]
+#53
+[[2, 0], [2, 1], [2, 2], [3, 2], [2, 3], [3, 3], [3, 0], [0, 2], [1, 1], [0, 1], [1, 0], [0, 0], [1, 2], [0, 3]]
+#54
+[[3, 1], [1, 1], [2, 1], [2, 2], [1, 0], [0, 1], [0, 0], [1, 3], [3, 3], [1, 2]]
+#55
+[[2, 0], [2, 2], [3, 2], [2, 3], [3, 3], [3, 1], [3, 0], [0, 2], [1, 1], [0, 1], [1, 0], [0, 0], [1, 3], [0, 3]]
+#56
+[[2, 0], [2, 1], [2, 2], [3, 2], [2, 3], [3, 3], [3, 1], [1, 1], [0, 2], [0, 1], [1, 0], [1, 3], [0, 0], [1, 2]]
+#57
+[[2, 1], [2, 2], [2, 3], [3, 2], [3, 3], [3, 1], [3, 0], [1, 1], [0, 1], [1, 0], [1, 3], [0, 0], [1, 2], [0, 3]]
+#58
+[[2, 0], [3, 0], [1, 1], [0, 2], [2, 2], [1, 0], [0, 1], [0, 0], [3, 3], [0, 3]]
+#59
+[[2, 0], [2, 1], [2, 2], [2, 3], [3, 2], [3, 3], [3, 1], [3, 0], [0, 2], [1, 1], [1, 3], [0, 0], [1, 2], [0, 3]]
+#60
+[[3, 1], [3, 0], [2, 1], [1, 1], [2, 2], [0, 0], [3, 2], [1, 3], [2, 3], [1, 2], [3, 3], [0, 3]]
+#61
+[[2, 0], [2, 1], [2, 2], [3, 3], [3, 1], [3, 0], [0, 2], [1, 1], [0, 1], [1, 0], [1, 3], [0, 0], [1, 2], [0, 3]]
+#62
+[[3, 1], [2, 0], [3, 0], [0, 2], [1, 1], [2, 2], [0, 0], [3, 2], [1, 3], [2, 3], [3, 3], [0, 3]]
+#63
+[[3, 1], [2, 0], [1, 1], [2, 1], [0, 2], [2, 2], [1, 3], [0, 0], [3, 2], [2, 3], [3, 3], [1, 2]]
+#64
+[[3, 1], [3, 0], [1, 1], [0, 1], [1, 0], [2, 2], [0, 0], [3, 2], [1, 3], [2, 3], [3, 3], [0, 3]]
+#65
+[[3, 0], [2, 0], [1, 1], [2, 1], [0, 2], [2, 2], [0, 0], [3, 2], [2, 3], [3, 3], [1, 2], [0, 3]]
+#66
+[[3, 1], [1, 1], [2, 1], [2, 2], [1, 0], [0, 1], [3, 2], [2, 3], [0, 0], [1, 3], [3, 3], [1, 2]]
+#67
+[[2, 0], [1, 1], [2, 1], [0, 2], [0, 1], [1, 0], [2, 2], [0, 0], [3, 2], [2, 3], [3, 3], [1, 2]]
+#68
+[[2, 0], [3, 0], [1, 1], [0, 2], [2, 2], [1, 0], [0, 1], [3, 2], [2, 3], [0, 0], [3, 3], [0, 3]]
+#69
+[[3, 1], [3, 0], [1, 1], [2, 1], [2, 2], [1, 0], [0, 1], [0, 0], [1, 3], [3, 3], [1, 2], [0, 3]]
+#70
+[[3, 1], [2, 0], [3, 0], [1, 1], [0, 2], [2, 2], [1, 0], [0, 1], [1, 3], [0, 0], [3, 3], [0, 3]]
+#71
+[[3, 1], [2, 0], [0, 2], [1, 1], [2, 1], [2, 2], [1, 0], [0, 1], [0, 0], [1, 3], [3, 3], [1, 2]]
+#72
+[[2, 3, 0], [0, 2, 3], [3, 3, 1], [3, 3, 2], [3, 3, 3], [1, 3, 0], [1, 3, 1], [1, 2, 2], [0, 3, 1], [0, 3, 0], [0, 3, 3], [0, 3, 2], [2, 2, 2], [2, 2, 1], [2, 2, 3], [3, 0, 0], [3, 0, 1], [2, 2, 0], [3, 0, 2], [0, 1, 2], [3, 0, 3], [0, 1, 3], [2, 0, 3], [2, 0, 1], [1, 2, 0], [2, 0, 2], [1, 2, 1], [2, 0, 0], [1, 1, 3], [1, 1, 2], [1, 1, 1], [0, 2, 2], [0, 2, 1], [0, 2, 0], [2, 1, 2], [2, 1, 1], [2, 1, 0], [3, 1, 3], [3, 1, 0], [3, 1, 1], [0, 0, 2], [0, 0, 1], [1, 1, 0], [0, 0, 3], [1, 0, 1], [1, 0, 0], [0, 1, 0], [1, 0, 3], [0, 1, 1], [1, 0, 2], [3, 2, 2], [3, 2, 3], [3, 2, 0], [0, 0, 0], [3, 3, 0], [2, 3, 3], [2, 3, 2], [1, 3, 3]]
+#73
+[[2, 3, 1], [3, 3, 1], [3, 3, 2], [3, 3, 3], [1, 3, 0], [1, 3, 1], [1, 3, 2], [1, 2, 3], [1, 2, 2], [0, 3, 1], [0, 3, 0], [0, 3, 3], [2, 2, 2], [2, 2, 1], [2, 2, 3], [3, 0, 0], [3, 0, 1], [2, 2, 0], [0, 1, 2], [3, 0, 3], [0, 1, 3], [2, 0, 1], [1, 2, 0], [2, 0, 2], [1, 2, 1], [2, 0, 0], [1, 1, 3], [1, 1, 2], [1, 1, 1], [0, 2, 2], [0, 2, 1], [0, 2, 0], [2, 1, 3], [2, 1, 2], [2, 1, 1], [2, 1, 0], [3, 1, 3], [3, 1, 0], [3, 1, 1], [3, 1, 2], [0, 0, 2], [0, 0, 1], [1, 1, 0], [0, 0, 3], [1, 0, 1], [1, 0, 0], [0, 1, 0], [1, 0, 3], [0, 1, 1], [1, 0, 2], [3, 2, 2], [3, 2, 3], [3, 2, 1], [0, 0, 0], [3, 3, 0], [2, 3, 3], [2, 3, 2], [1, 3, 3]]
+#74
+[[2, 3, 0], [2, 3, 1], [0, 2, 3], [3, 3, 1], [3, 3, 2], [3, 3, 3], [1, 3, 0], [1, 3, 1], [1, 3, 2], [1, 2, 3], [1, 2, 2], [0, 3, 1], [0, 3, 0], [0, 3, 3], [0, 3, 2], [2, 2, 2], [2, 2, 1], [2, 2, 3], [3, 0, 0], [3, 0, 1], [2, 2, 0], [3, 0, 2], [3, 0, 3], [0, 1, 3], [2, 0, 3], [2, 0, 2], [1, 2, 1], [2, 0, 0], [1, 1, 3], [1, 1, 2], [1, 1, 1], [0, 2, 2], [0, 2, 0], [2, 1, 3], [2, 1, 2], [2, 1, 1], [3, 1, 3], [3, 1, 0], [3, 1, 1], [3, 1, 2], [0, 0, 2], [0, 0, 1], [1, 1, 0], [0, 0, 3], [1, 0, 1], [1, 0, 0], [0, 1, 0], [1, 0, 3], [0, 1, 1], [3, 2, 2], [3, 2, 3], [3, 2, 0], [3, 2, 1], [0, 0, 0], [3, 3, 0], [2, 3, 3], [2, 3, 2], [1, 3, 3]]
+#75
+[[2, 3, 0], [2, 3, 1], [0, 2, 3], [3, 3, 1], [3, 3, 2], [3, 3, 3], [1, 3, 1], [1, 3, 2], [1, 2, 3], [1, 2, 2], [0, 3, 0], [0, 3, 3], [0, 3, 2], [2, 2, 2], [2, 2, 1], [2, 2, 3], [3, 0, 0], [2, 2, 0], [3, 0, 2], [0, 1, 2], [3, 0, 3], [2, 0, 3], [2, 0, 1], [1, 2, 0], [2, 0, 2], [1, 2, 1], [2, 0, 0], [1, 1, 3], [1, 1, 2], [1, 1, 1], [0, 2, 2], [0, 2, 1], [0, 2, 0], [2, 1, 3], [2, 1, 2], [2, 1, 1], [2, 1, 0], [3, 1, 3], [3, 1, 1], [3, 1, 2], [0, 0, 2], [0, 0, 1], [1, 1, 0], [0, 0, 3], [1, 0, 1], [1, 0, 0], [0, 1, 0], [1, 0, 2], [0, 1, 1], [3, 2, 2], [3, 2, 3], [3, 2, 0], [3, 2, 1], [0, 0, 0], [3, 3, 0], [2, 3, 3], [2, 3, 2], [1, 3, 3]]
+Класс B
+#76
+[[2, 3, 0], [2, 3, 1], [0, 2, 3], [3, 3, 1], [3, 3, 2], [3, 3, 3], [1, 3, 1], [1, 3, 2], [1, 2, 3], [1, 2, 2], [0, 3, 0], [0, 3, 3], [0, 3, 2], [2, 2, 2], [2, 2, 1], [2, 2, 3], [3, 0, 0], [2, 2, 0], [3, 0, 2], [3, 0, 3], [2, 0, 3], [1, 2, 1], [2, 0, 2], [2, 0, 0], [1, 1, 3], [1, 1, 2], [1, 1, 1], [0, 2, 2], [0, 2, 0], [2, 1, 3], [2, 1, 2], [2, 1, 1], [3, 1, 3], [3, 1, 1], [3, 1, 2], [0, 0, 2], [0, 0, 1], [1, 1, 0], [0, 0, 3], [1, 0, 1], [1, 0, 0], [0, 1, 0], [0, 1, 1], [3, 2, 2], [3, 2, 3], [3, 2, 0], [3, 2, 1], [0, 0, 0], [3, 3, 0], [2, 3, 3], [2, 3, 2], [1, 3, 3]]
+#77
+[[2, 3, 1], [3, 3, 1], [3, 3, 2], [3, 3, 3], [1, 3, 0], [1, 3, 1], [1, 3, 2], [1, 2, 3], [1, 2, 2], [0, 3, 1], [0, 3, 0], [0, 3, 3], [2, 2, 2], [2, 2, 1], [2, 2, 3], [3, 0, 0], [3, 0, 1], [2, 2, 0], [3, 0, 3], [0, 1, 3], [1, 2, 1], [2, 0, 2], [2, 0, 0], [1, 1, 3], [1, 1, 2], [1, 1, 1], [0, 2, 2], [0, 2, 0], [2, 1, 3], [2, 1, 2], [2, 1, 1], [3, 1, 3], [3, 1, 0], [3, 1, 1], [3, 1, 2], [0, 0, 2], [0, 0, 1], [1, 1, 0], [0, 0, 3], [1, 0, 1], [1, 0, 0], [0, 1, 0], [1, 0, 3], [0, 1, 1], [3, 2, 2], [3, 2, 3], [3, 2, 1], [0, 0, 0], [3, 3, 0], [2, 3, 3], [2, 3, 2], [1, 3, 3]]
+#78
+[[2, 3, 1], [3, 3, 1], [3, 3, 2], [3, 3, 3], [1, 3, 1], [1, 3, 2], [1, 2, 3], [1, 2, 2], [0, 3, 0], [0, 3, 3], [2, 2, 2], [2, 2, 1], [2, 2, 3], [3, 0, 0], [2, 2, 0], [0, 1, 2], [3, 0, 3], [2, 0, 1], [1, 2, 0], [1, 2, 1], [2, 0, 2], [2, 0, 0], [1, 1, 3], [1, 1, 2], [1, 1, 1], [0, 2, 2], [0, 2, 1], [0, 2, 0], [2, 1, 3], [2, 1, 2], [2, 1, 1], [2, 1, 0], [3, 1, 3], [3, 1, 1], [3, 1, 2], [0, 0, 2], [0, 0, 1], [1, 1, 0], [0, 0, 3], [1, 0, 1], [1, 0, 0], [0, 1, 0], [0, 1, 1], [1, 0, 2], [3, 2, 2], [3, 2, 3], [3, 2, 1], [0, 0, 0], [3, 3, 0], [2, 3, 3], [2, 3, 2], [1, 3, 3]]
+#79
+[[2, 3, 0], [0, 2, 3], [3, 3, 1], [3, 3, 2], [3, 3, 3], [1, 3, 0], [1, 3, 1], [1, 2, 2], [0, 3, 1], [0, 3, 0], [0, 3, 3], [0, 3, 2], [2, 2, 2], [2, 2, 1], [2, 2, 3], [3, 0, 0], [3, 0, 1], [2, 2, 0], [3, 0, 2], [3, 0, 3], [0, 1, 3], [2, 0, 3], [1, 2, 1], [2, 0, 2], [2, 0, 0], [1, 1, 3], [1, 1, 2], [1, 1, 1], [0, 2, 2], [0, 2, 0], [2, 1, 2], [2, 1, 1], [3, 1, 3], [3, 1, 0], [3, 1, 1], [0, 0, 2], [0, 0, 1], [1, 1, 0], [0, 0, 3], [1, 0, 1], [1, 0, 0], [0, 1, 0], [1, 0, 3], [0, 1, 1], [3, 2, 2], [3, 2, 3], [3, 2, 0], [0, 0, 0], [3, 3, 0], [2, 3, 3], [2, 3, 2], [1, 3, 3]]
+#80
+[[2, 3, 0], [0, 2, 3], [3, 3, 1], [3, 3, 2], [3, 3, 3], [1, 3, 1], [1, 2, 2], [0, 3, 0], [0, 3, 3], [0, 3, 2], [2, 2, 2], [2, 2, 1], [2, 2, 3], [3, 0, 0], [2, 2, 0], [3, 0, 2], [0, 1, 2], [3, 0, 3], [2, 0, 3], [2, 0, 1], [1, 2, 0], [1, 2, 1], [2, 0, 2], [2, 0, 0], [1, 1, 3], [1, 1, 2], [1, 1, 1], [0, 2, 2], [0, 2, 1], [0, 2, 0], [2, 1, 2], [2, 1, 1], [2, 1, 0], [3, 1, 3], [3, 1, 1], [0, 0, 2], [0, 0, 1], [1, 1, 0], [0, 0, 3], [1, 0, 1], [1, 0, 0], [0, 1, 0], [0, 1, 1], [1, 0, 2], [3, 2, 2], [3, 2, 3], [3, 2, 0], [0, 0, 0], [3, 3, 0], [2, 3, 3], [2, 3, 2], [1, 3, 3]]
+#81
+[[3, 3, 1], [3, 3, 2], [3, 3, 3], [1, 3, 0], [1, 3, 1], [1, 2, 2], [0, 3, 1], [0, 3, 0], [0, 3, 3], [2, 2, 2], [2, 2, 1], [2, 2, 3], [3, 0, 0], [3, 0, 1], [2, 2, 0], [0, 1, 2], [3, 0, 3], [0, 1, 3], [2, 0, 1], [1, 2, 0], [1, 2, 1], [2, 0, 2], [2, 0, 0], [1, 1, 3], [1, 1, 2], [1, 1, 1], [0, 2, 2], [0, 2, 1], [0, 2, 0], [2, 1, 2], [2, 1, 1], [2, 1, 0], [3, 1, 3], [3, 1, 0], [3, 1, 1], [0, 0, 2], [0, 0, 1], [1, 1, 0], [0, 0, 3], [1, 0, 1], [1, 0, 0], [0, 1, 0], [1, 0, 3], [0, 1, 1], [1, 0, 2], [3, 2, 2], [3, 2, 3], [0, 0, 0], [3, 3, 0], [2, 3, 3], [2, 3, 2], [1, 3, 3]]
+#82
+[[0, 2, 1, 0], [0, 2, 1, 1], [0, 0, 2, 0], [0, 2, 1, 2], [0, 1, 1, 3], [0, 1, 1, 1], [0, 1, 1, 2], [0, 1, 1, 0], [0, 0, 1, 3], [3, 3, 0, 0], [0, 0, 1, 2], [0, 0, 1, 1], [3, 3, 0, 1], [0, 0, 1, 0], [3, 3, 0, 2], [3, 3, 0, 3], [0, 2, 0, 0], [0, 2, 0, 1], [0, 2, 0, 2], [0, 2, 0, 3], [0, 1, 0, 2], [0, 1, 0, 3], [0, 1, 0, 0], [0, 1, 0, 1], [0, 0, 0, 0], [0, 0, 0, 2], [0, 0, 0, 1], [0, 0, 0, 3], [0, 3, 0, 0], [0, 3, 0, 1], [0, 3, 0, 2], [0, 3, 0, 3], [0, 2, 3, 2], [0, 2, 3, 3], [0, 2, 3, 0], [2, 2, 3, 2], [2, 2, 3, 3], [0, 0, 3, 3], [0, 0, 3, 2], [0, 2, 2, 3], [0, 3, 1, 3], [0, 3, 1, 1], [0, 0, 3, 0], [0, 0, 3, 1], [0, 3, 1, 0], [0, 2, 2, 0], [0, 2, 2, 1], [0, 2, 2, 2], [2, 0, 3, 2], [2, 0, 3, 3], [2, 0, 3, 0], [2, 2, 2, 3], [2, 2, 2, 1], [2, 2, 2, 2], [2, 2, 3, 1], [2, 2, 3, 0], [2, 0, 2, 3], [0, 0, 2, 2], [0, 0, 2, 1], [0, 0, 2, 3], [2, 0, 2, 0], [2, 0, 2, 2], [2, 0, 2, 1], [2, 1, 2, 1], [2, 1, 2, 0], [2, 1, 1, 1], [2, 1, 1, 2], [2, 1, 1, 3], [2, 0, 1, 2], [1, 1, 0, 1], [1, 1, 0, 2], [1, 1, 0, 0], [2, 0, 1, 1], [2, 0, 1, 0], [1, 1, 0, 3], [2, 1, 1, 0], [1, 0, 0, 2], [1, 0, 0, 3], [1, 0, 0, 0], [1, 0, 0, 1], [1, 0, 1, 0], [2, 1, 0, 2], [2, 1, 0, 0], [2, 1, 0, 1], [2, 0, 0, 3], [2, 0, 0, 1], [2, 0, 0, 2], [0, 1, 3, 3], [2, 0, 0, 0], [0, 1, 3, 1], [1, 1, 1, 0], [1, 1, 1, 1], [1, 1, 1, 2], [1, 1, 3, 2], [1, 1, 3, 3], [1, 1, 1, 3], [2, 1, 3, 3], [1, 1, 2, 0], [0, 1, 2, 1], [0, 1, 2, 0], [0, 1, 2, 2], [1, 1, 2, 3], [1, 1, 2, 1], [1, 1, 2, 2], [2, 1, 3, 2], [2, 1, 3, 1], [2, 1, 2, 2], [2, 1, 2, 3], [1, 1, 3, 1], [1, 1, 3, 0], [0, 1, 3, 0], [3, 1, 1, 2], [3, 1, 1, 3], [1, 0, 3, 0], [1, 0, 3, 1], [1, 0, 2, 2], [3, 1, 2, 2], [3, 1, 2, 1], [1, 0, 2, 0], [1, 0, 2, 1], [3, 1, 2, 3], [1, 3, 3, 1], [1, 3, 3, 0], [1, 3, 3, 3], [1, 3, 3, 2], [3, 1, 3, 3], [1, 2, 3, 2], [1, 2, 3, 1], [3, 1, 3, 2], [1, 0, 1, 3], [3, 1, 3, 1], [1, 0, 1, 2], [1, 2, 3, 3], [1, 0, 1, 1], [3, 1, 3, 0], [3, 2, 3, 3], [2, 2, 0, 3], [2, 2, 0, 0], [2, 2, 0, 2], [2, 2, 0, 1], [1, 2, 2, 3], [1, 2, 2, 2], [1, 2, 2, 1], [1, 2, 2, 0], [2, 2, 1, 3], [2, 2, 1, 2], [2, 2, 1, 1], [2, 2, 1, 0], [2, 2, 2, 0], [1, 2, 1, 0], [1, 2, 1, 2], [1, 0, 3, 3], [1, 2, 1, 1], [1, 2, 1, 3], [3, 0, 2, 0], [3, 0, 2, 3], [3, 0, 2, 2], [3, 2, 1, 2], [3, 2, 1, 1], [3, 2, 1, 3], [2, 3, 3, 0], [1, 2, 0, 2], [1, 2, 0, 0], [2, 3, 2, 1], [1, 2, 0, 1], [2, 3, 2, 0], [2, 3, 2, 3], [2, 3, 2, 2], [1, 3, 0, 0], [0, 3, 2, 0], [3, 2, 2, 0], [3, 2, 2, 1], [1, 3, 0, 3], [3, 0, 1, 3], [0, 3, 2, 3], [1, 3, 0, 1], [0, 3, 2, 2], [3, 0, 3, 3], [3, 0, 3, 2], [3, 0, 3, 1], [3, 0, 3, 0], [3, 2, 2, 3], [3, 2, 2, 2], [3, 3, 3, 2], [3, 3, 3, 3], [2, 3, 3, 3], [2, 3, 3, 2], [2, 3, 3, 1], [0, 3, 3, 0], [3, 2, 3, 1], [3, 2, 3, 2], [0, 3, 3, 2], [3, 2, 3, 0], [0, 3, 3, 1], [0, 3, 3, 3], [3, 0, 0, 1], [3, 0, 0, 0], [3, 3, 3, 1], [3, 3, 3, 0], [2, 3, 0, 0], [3, 1, 0, 0], [3, 3, 2, 1], [2, 3, 0, 3], [2, 3, 0, 2], [3, 3, 2, 2], [3, 3, 2, 3], [1, 3, 2, 3], [1, 3, 2, 1], [1, 3, 2, 2], [3, 2, 0, 3], [3, 2, 0, 2], [3, 2, 0, 0], [3, 0, 1, 1], [3, 0, 1, 0], [3, 3, 2, 0], [3, 1, 0, 3], [3, 1, 0, 1], [3, 1, 1, 0], [2, 3, 1, 2], [2, 3, 1, 1], [3, 1, 1, 1], [3, 3, 1, 2], [3, 3, 1, 3], [3, 3, 1, 0], [2, 3, 1, 3], [3, 3, 1, 1], [1, 3, 1, 2], [1, 3, 1, 3], [3, 0, 0, 2], [3, 0, 0, 3], [1, 3, 1, 0], [1, 3, 1, 1]]
+ 
