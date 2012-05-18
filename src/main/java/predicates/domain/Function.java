@@ -1,8 +1,6 @@
 package predicates.domain;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 
 /**
  * Created by IntelliJ IDEA.
@@ -10,12 +8,12 @@ import java.util.List;
  * Date: 11.04.12
  * Time: 23:24
  */
-public class Func implements Iterable<Func>, Iterator<Func> {
+public class Function implements Iterable<Function>, Iterator<Function> {
     private Integer dim;
     private Integer capacity;
     private Tuple values;
 
-    public Func(Integer dim, Integer capacity) {
+    public Function(Integer dim, Integer capacity) {
         this.dim = dim;
         this.capacity = capacity;
         values = new Tuple(dim, (int) Math.pow(dim,capacity));
@@ -45,14 +43,14 @@ public class Func implements Iterable<Func>, Iterator<Func> {
     }
 
     @Override
-    public Func next() {
+    public Function next() {
         values.next();
         return this;
     }
 
 
     @Override
-    public Iterator<Func> iterator() {
+    public Iterator<Function> iterator() {
         return this;
     }
 

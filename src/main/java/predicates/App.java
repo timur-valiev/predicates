@@ -1,13 +1,14 @@
 package predicates;
 
-import predicates.domain.Func;
+import predicates.domain.Function;
 import predicates.domain.Predicate;
 import predicates.factory.*;
 
 import java.io.BufferedWriter;
 import java.io.FileWriter;
-import java.io.IOException;
+import java.util.ArrayList;
 import java.util.LinkedHashSet;
+import java.util.List;
 import java.util.Set;
 
 /**
@@ -17,92 +18,8 @@ import java.util.Set;
 public class App 
 {
     public static void main( String[] args ) throws Exception {
-        BufferedWriter writer =  new BufferedWriter(new FileWriter("RESULTS"));
-        /*writer.write("Class P:");
-        writer.newLine();
-        for (Func func: new Func(4,1)){
-            for (Predicate predicate: new PredicateFactory_P(4)){
-                if (PredicateService.checkSave(predicate, func)) {
-                    writer.write(func.getValues().getValues().toString() + " " + predicate.getVectors().toString());
-                    writer.newLine();
-                }
-            }
-        }
+        BufferedWriter writer =  new BufferedWriter(new FileWriter("text/prilozh_A.txt"));
 
-        PredicateFactory_E predicateFactory_e = new PredicateFactory_E(4);
-        writer.write("Class E:");
-        writer.newLine();
-        for (Func func: new Func(4,1)){
-            Predicate p = predicateFactory_e.getMostExtensivePredicate(func);
-            if (p!=null){
-                writer.write(func.getValues().getValues().toString() + " " + p.getVectors().toString());
-                writer.newLine();
-            }
-        }
-
-        try {
-            Predicate predicate4 = new PredicateFactory_L(4).getPredicate4();
-            writer.write("Class L: " + predicate4.getVectors().toString());
-            writer.newLine();
-            for(Func func:new Func(4,1))
-                if (PredicateService.checkSave(predicate4, func)) {
-                    writer.write(func.getValues().getValues().toString());
-                    writer.newLine();
-                }
-
-        } catch (Exception e) {
-            e.printStackTrace();  //To change body of catch statement use File | Settings | File Templates.
-        }
-
-        writer.write("Class O:");
-        writer.newLine();
-        for (Func func: new Func(4,1)){
-            for (Predicate predicate: new PredicateFactory_O(4)){
-                if (PredicateService.checkSave(predicate, func)) {
-                   writer.write(func.getValues().getValues().toString() + " " + predicate.getVectors().toString());
-                   writer.newLine();
-                }
-            }
-        }
-
-        writer.write("Class C:");
-        writer.newLine();
-        for (Func func: new Func(4,1)){
-            for (Predicate predicate: new PredicateFactory_C(4,2)){
-                if (PredicateService.checkSave(predicate, func)) {
-                    writer.write(func.getValues().getValues().toString() + " " + predicate.getVectors().toString());
-                    writer.newLine();
-                }
-            }
-        }
-        for (Func func: new Func(4,1)){
-            for (Predicate predicate: new PredicateFactory_C(4,3)){
-                if (PredicateService.checkSave(predicate, func)) {
-                    writer.write(func.getValues().getValues().toString() + " " + predicate.getVectors().toString());
-                    writer.newLine();
-                }
-            }
-        }
-
-        writer.write("Class B:");
-        writer.newLine();
-        for (Func func: new Func(4,1)){
-            for (Predicate predicate: new PredicateFactory_B(3,1,4)){
-                if (PredicateService.checkSave(predicate, func)) {
-                    writer.write(func.getValues().getValues().toString() + " " + predicate.getVectors().toString());
-                    writer.newLine();
-                }
-            }
-        }
-        for (Func func: new Func(4,1)){
-            for (Predicate predicate: new PredicateFactory_B(4,1,4)){
-                if (PredicateService.checkSave(predicate, func)) {
-                    writer.write(func.getValues().getValues().toString() + " " + predicate.getVectors().toString());
-                    writer.newLine();
-                }
-            }
-        }
-        */
         Set<Predicate> all = new LinkedHashSet<Predicate>();
         Set<Predicate> all_B3 = new LinkedHashSet<Predicate>();
         Set<Predicate> all_C1 = new LinkedHashSet<Predicate>();
@@ -160,7 +77,80 @@ public class App
             all.add(predicate);
             all_P.add(predicate);
         }
-        writer.write(all.toString());
+        writer.write("Приложение А\n\nТаблица принадлежности функций предполным классам\n");
+
+        List<Predicate> all_list = new ArrayList<Predicate>();
+        List<Predicate> p_list = new ArrayList<Predicate>(all_P);
+        List<Predicate> o_list = new ArrayList<Predicate>(all_O);
+        List<Predicate> l_list = new ArrayList<Predicate>(all_L);
+        List<Predicate> e_list = new ArrayList<Predicate>(all_E);
+        List<Predicate> c_list = new ArrayList<Predicate>(all_C1);
+        c_list.addAll(all_C2);
+        c_list.addAll(all_C3);
+        List<Predicate> b_list = new ArrayList<Predicate>(all_B3);
+        b_list.addAll(all_B4);
+
+
+        all_list.addAll(p_list);
+        all_list.addAll(o_list);
+        all_list.addAll(l_list);
+        all_list.addAll(e_list);
+        all_list.addAll(c_list);
+        all_list.addAll(b_list);
+        for (Function function: new Function(4,1)){
+            writer.newLine();
+            writer.write(function.getValues().getValues().toString()+" ");
+            int i=0;
+            for (Predicate predicate:all_list){
+                if(i%10==0)
+                    writer.write(" ");
+                i++;
+                if (PredicateService.checkSave(predicate,function))
+                    writer.write("+");
+                else
+                    writer.write("o");
+            }
+        }
+
+        int i=0;
+        writer.write("\n\nСписок предикатов, описывающих предполные классы\n");
+        writer.write("Класс Р\n");
+        for (Predicate predicate:p_list){
+            i++;
+            writer.write("#"+i+"\n");
+            writer.write(predicate.getVectors().toString()+"\n");
+        }
+        writer.write("Класс O\n");
+        for (Predicate predicate:o_list){
+            i++;
+            writer.write("#"+i+"\n");
+            writer.write(predicate.getVectors().toString()+"\n");
+        }
+        writer.write("Класс L\n");
+        for (Predicate predicate:l_list){
+            i++;
+            writer.write("#"+i+"\n");
+            writer.write(predicate.getVectors().toString()+"\n");
+        }
+        writer.write("Класс E\n");
+        for (Predicate predicate:e_list){
+            i++;
+            writer.write("#"+i+"\n");
+            writer.write(predicate.getVectors().toString()+"\n");
+        }
+        writer.write("Класс C\n");
+        for (Predicate predicate:c_list){
+            i++;
+            writer.write("#"+i+"\n");
+            writer.write(predicate.getVectors().toString()+"\n");
+        }
+        writer.write("Класс B\n");
+        for (Predicate predicate:b_list){
+            i++;
+            writer.write("#"+i+"\n");
+            writer.write(predicate.getVectors().toString()+"\n");
+        }
+
         writer.flush();
         writer.close();
     }

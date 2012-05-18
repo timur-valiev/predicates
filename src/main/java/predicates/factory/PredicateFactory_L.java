@@ -1,12 +1,10 @@
 package predicates.factory;
 
-import predicates.domain.Func;
 import predicates.domain.Permutation;
 import predicates.domain.Predicate;
 import predicates.domain.Tuple;
 
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 

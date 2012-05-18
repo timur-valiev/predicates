@@ -1,6 +1,6 @@
 package predicates.factory;
 
-import predicates.domain.Func;
+import predicates.domain.Function;
 import predicates.domain.Predicate;
 import predicates.domain.Tuple;
 
@@ -20,14 +20,14 @@ public class PredicateFactory_E extends PredicateFactory implements Iterator<Pre
         current = new Tuple(dim-1, dim);
     }
 
-    public Predicate getMostExtensivePredicate(Func func) {
+    public Predicate getMostExtensivePredicate(Function function) {
         Map<Integer,Set<Integer>> classes = new HashMap<Integer, Set<Integer>>();
         for(int i=0;i<dim;i++){
             classes.put(i,new HashSet<Integer>());
             classes.get(i).add(i);
         }
         for(int i = 0; i < dim; i++){
-            int f = func.getValue(i);
+            int f = function.getValue(i);
             classes.get(i).addAll(classes.get(f));
             classes.put(f,classes.get(i));
         }
@@ -65,7 +65,7 @@ public class PredicateFactory_E extends PredicateFactory implements Iterator<Pre
         Predicate answer = new Predicate(dim,2);
         for (int i=0;i<dim;i++)
             for(int j=0;j<dim;j++)
-                if (current.getValue(i)==current.getValue(j))
+                if (current.getValue(i).equals(current.getValue(j)))
                     answer.addVector(Arrays.asList(i,j));
         return answer;
     }

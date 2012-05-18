@@ -28,6 +28,12 @@ public class PredicateFactory_C extends PredicateFactory implements Iterable<Pre
             if (c.isStart() || c.isFull())
                 continue;
 
+            int ans= 0;
+            for (int ii: c.getValues())
+                ans+=ii;
+            if (ans>1)
+                continue;
+
             Predicate prefinal = new Predicate(refl);
             Set<Tuple> notIncluded = new HashSet<Tuple>();
 
