@@ -1,5 +1,6 @@
 package predicates.factory;
 
+import predicates.domain.Permutation;
 import predicates.domain.Predicate;
 import predicates.domain.Tuple;
 
@@ -37,7 +38,8 @@ public class PredicateFactory_C extends PredicateFactory implements Iterable<Pre
                 if (isInC)
                     prefinal.addVector(tuple2.getValues());
                 else
-                    notIncluded.add(tuple2);
+                    if (!prefinal.contains(tuple2.getValues()))
+                        notIncluded.add(new Tuple(tuple2));
             }
 
             List<Tuple> candidates = new ArrayList<Tuple>(notIncluded);
@@ -46,12 +48,24 @@ public class PredicateFactory_C extends PredicateFactory implements Iterable<Pre
                     continue;
                 Predicate fin = new Predicate(prefinal);
                 for (int pos=0;pos<cand.getValues().size(); pos++)
-                    if (pos==1)
-                        fin.addVector(candidates.get(pos).getValues());
-                predicateSet.add(fin);
+                    if (cand.getValue(pos)==1)
+                        fin.addVectors(GetSimmetricalSet(candidates.get(pos).getValues()));
+                if(!fin.isFull())
+                    predicateSet.add(fin);
             }
         }
         current = predicateSet.iterator();
+    }
+
+    private Collection<List<Integer>> GetSimmetricalSet(List<Integer> values) {
+        Set<List<Integer>> answer = new HashSet<List<Integer>>();
+        for (Permutation permutation:new Permutation(values.size())) {
+            List<Integer> cand = new ArrayList<Integer>();
+            for (Integer i:permutation.getValue())
+                cand.add(values.get(i));
+            answer.add(cand);
+        }
+        return answer;
     }
 
 

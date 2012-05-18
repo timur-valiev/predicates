@@ -2,9 +2,7 @@ package predicates.domain;
 
 import com.google.common.collect.ImmutableList;
 
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Created by IntelliJ IDEA.
@@ -32,6 +30,12 @@ public class Predicate {
         vectors.add(ImmutableList.copyOf(vector));
     }
 
+    public void addVectors(Collection<List<Integer>> vectors1){
+        for (List<Integer> vector:vectors1)
+            vectors.add(ImmutableList.copyOf(vector));
+    }
+
+
     public boolean contains(List<Integer> v) {
         return vectors.contains(ImmutableList.copyOf(v));
     }
@@ -57,5 +61,20 @@ public class Predicate {
         for(ImmutableList<Integer> list:vectors)
             ans += list.hashCode();
         return ans;
+    }
+
+    public Predicate getMirror(){
+        Predicate answer = new Predicate(dim, capacity);
+        for (List<Integer> list: vectors){
+            List<Integer> list2 = new ArrayList<Integer>();
+            for (int i = list.size()-1;i>=0;i--)
+                list2.add(list.get(i));
+            answer.addVector(list2);
+        }
+        return answer;
+    }
+
+    public boolean isFull() {
+        return Math.pow(dim,capacity) == vectors.size();
     }
 }

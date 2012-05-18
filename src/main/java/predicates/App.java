@@ -144,13 +144,16 @@ public class App
             all_E.add(predicate);
         }
 
-        Predicate pred = new PredicateFactory_L(4).getPredicate4();
-        all.add(pred);
-        all_L.add(pred);
+        for (Predicate predicate: new PredicateFactory_L(4)){
+            all.add(predicate);
+            all_L.add(predicate);
+        }
 
         for (Predicate predicate: new PredicateFactory_O(4)){
-            all.add(predicate);
-            all_O.add(predicate);
+            if (!all_O.contains(predicate.getMirror())){
+                all.add(predicate);
+                all_O.add(predicate);
+            }
         }
 
         for (Predicate predicate: new PredicateFactory_P(4)){

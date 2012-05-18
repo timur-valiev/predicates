@@ -28,7 +28,10 @@ public class Tuple implements Iterable<Tuple>, Iterator<Tuple> {
     public Tuple(Tuple next) {
         this.dim = next.dim;
         this.capacity = next.capacity;
-        this.next = new ArrayList<Integer>(next.next);
+        if(next.hasNext())
+            this.next = new ArrayList<Integer>(next.next);
+        else
+            this.next = null;
         this.current = new ArrayList<Integer>(next.current);
     }
 
