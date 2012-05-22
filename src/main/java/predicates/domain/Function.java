@@ -2,16 +2,10 @@ package predicates.domain;
 
 import java.util.Iterator;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Тимур
- * Date: 11.04.12
- * Time: 23:24
- */
 public class Function implements Iterable<Function>, Iterator<Function> {
-    private Integer dim;
-    private Integer capacity;
-    private Tuple values;
+    private Integer dim;//размерность
+    private Integer capacity;//местность
+    private Tuple values;//значения
 
     public Function(Integer dim, Integer capacity) {
         this.dim = dim;
@@ -48,7 +42,6 @@ public class Function implements Iterable<Function>, Iterator<Function> {
         return this;
     }
 
-
     @Override
     public Iterator<Function> iterator() {
         return this;
@@ -60,7 +53,6 @@ public class Function implements Iterable<Function>, Iterator<Function> {
     public Integer getCapacity() {
         return capacity;
     }
-
 
     public Tuple getValues() {
         return values;

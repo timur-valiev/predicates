@@ -3,12 +3,6 @@ package predicates.factory;
 import predicates.domain.Predicate;
 import predicates.domain.Tuple;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Тимур
- * Date: 08.05.12
- * Time: 18:46
- */
 public class PredicateFactory_Reflecsive extends PredicateFactory{
     
     public static Predicate getTau(Integer dim, Integer capacity){

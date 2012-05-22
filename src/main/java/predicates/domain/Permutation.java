@@ -5,11 +5,7 @@ import java.util.*;
 import static java.util.Collections.max;
 import static java.util.Collections.sort;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Тимур
- * Date: 13.04.12
- * Time: 12:05
+/*перестановка
  */
 public class Permutation implements Iterable<Permutation>, Iterator<Permutation> {
     private Integer capacity;
@@ -86,6 +82,7 @@ public class Permutation implements Iterable<Permutation>, Iterator<Permutation>
         return true;
     }
 
+    //проверка на простоту и равенство по длинне циклов
     public boolean isProductOfSimpleEqualCycles(){
         ArrayList<Boolean> checked = new ArrayList<Boolean>();
         for (int i=0;i<capacity;i++)
@@ -126,7 +123,5 @@ public class Permutation implements Iterable<Permutation>, Iterator<Permutation>
     }
 
     @Override
-    public void remove() {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
+    public void remove() {}
 }

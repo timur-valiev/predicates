@@ -6,12 +6,6 @@ import predicates.domain.Tuple;
 
 import java.util.*;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Тимур
- * Date: 12.04.12
- * Time: 23:48
- */
 public class PredicateFactory_E extends PredicateFactory implements Iterator<Predicate>, Iterable<Predicate>{
     Tuple current;
     

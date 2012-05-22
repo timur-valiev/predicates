@@ -2,16 +2,9 @@ package predicates.factory;
 
 import predicates.domain.Predicate;
 import predicates.domain.Tuple;
-
 import java.util.ArrayList;
 import java.util.Iterator;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Тимур
- * Date: 08.05.12
- * Time: 18:53
- */
 public class PredicateFactory_B extends PredicateFactory implements Iterable<Predicate>, Iterator<Predicate> {
     private Integer h;
     private Integer l;

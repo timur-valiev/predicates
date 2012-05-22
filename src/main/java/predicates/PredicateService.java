@@ -6,13 +6,8 @@ import predicates.domain.Predicate;
 
 import java.util.ArrayList;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Тимур
- * Date: 13.04.12
- * Time: 13:05
- */
 public class PredicateService {
+    //Метод, проверяющий факт сохранения функцией предиката
     public static boolean checkSave(Predicate predicate, Function function){
         if (function.getCapacity()==1){
             ArrayList<Integer> res = new ArrayList<Integer>();

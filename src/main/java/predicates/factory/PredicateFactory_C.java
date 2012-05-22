@@ -6,12 +6,6 @@ import predicates.domain.Tuple;
 
 import java.util.*;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Тимур
- * Date: 03.05.12
- * Time: 0:14
- */
 public class PredicateFactory_C extends PredicateFactory implements Iterable<Predicate>, Iterator<Predicate> {
     Set<Predicate> predicateSet;
     Iterator<Predicate> current;
@@ -28,10 +22,10 @@ public class PredicateFactory_C extends PredicateFactory implements Iterable<Pre
             if (c.isStart() || c.isFull())
                 continue;
 
-            int ans= 0;
+            int ans = 0;
             for (int ii: c.getValues())
-                ans+=ii;
-            if (ans>1)
+                ans += ii;
+            if (ans > 1)
                 continue;
 
             Predicate prefinal = new Predicate(refl);
@@ -73,7 +67,6 @@ public class PredicateFactory_C extends PredicateFactory implements Iterable<Pre
         }
         return answer;
     }
-
 
     @Override
     public Iterator<Predicate> iterator() {

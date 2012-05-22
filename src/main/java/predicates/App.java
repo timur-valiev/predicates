@@ -3,23 +3,19 @@ package predicates;
 import predicates.domain.Function;
 import predicates.domain.Predicate;
 import predicates.factory.*;
-
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.util.ArrayList;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-
-/**
- * Hello world!
- *
- */
+/*
+Main class-Launcher
+*/
 public class App 
 {
     public static void main( String[] args ) throws Exception {
         BufferedWriter writer =  new BufferedWriter(new FileWriter("text/prilozh_A.txt"));
-
         Set<Predicate> all = new LinkedHashSet<Predicate>();
         Set<Predicate> all_B3 = new LinkedHashSet<Predicate>();
         Set<Predicate> all_C1 = new LinkedHashSet<Predicate>();
@@ -31,48 +27,40 @@ public class App
         Set<Predicate> all_O = new LinkedHashSet<Predicate>();
         Set<Predicate> all_P = new LinkedHashSet<Predicate>();
 
-            for (Predicate predicate: new PredicateFactory_B(3,1,4)){
-                all.add(predicate);
-                all_B3.add(predicate);
-            }
-
+        for (Predicate predicate: new PredicateFactory_B(3,1,4)){
+            all.add(predicate);
+            all_B3.add(predicate);
+        }
         for (Predicate predicate: new PredicateFactory_B(4,1,4)){
             all.add(predicate);
             all_B4.add(predicate);
         }
-
         for (Predicate predicate: new PredicateFactory_C(4,1)){
             all.add(predicate);
             all_C1.add(predicate);
         }
-
         for (Predicate predicate: new PredicateFactory_C(4,2)){
             all.add(predicate);
             all_C2.add(predicate);
         }
-
         for (Predicate predicate: new PredicateFactory_C(4,3)){
             all.add(predicate);
             all_C3.add(predicate);
         }
-
         for (Predicate predicate: new PredicateFactory_E(4)){
             all.add(predicate);
             all_E.add(predicate);
         }
-
         for (Predicate predicate: new PredicateFactory_L(4)){
             all.add(predicate);
             all_L.add(predicate);
         }
-
         for (Predicate predicate: new PredicateFactory_O(4)){
             if (!all_O.contains(predicate.getMirror())){
                 all.add(predicate);
                 all_O.add(predicate);
             }
         }
-
         for (Predicate predicate: new PredicateFactory_P(4)){
             all.add(predicate);
             all_P.add(predicate);
@@ -89,7 +77,6 @@ public class App
         c_list.addAll(all_C3);
         List<Predicate> b_list = new ArrayList<Predicate>(all_B3);
         b_list.addAll(all_B4);
-
 
         all_list.addAll(p_list);
         all_list.addAll(o_list);

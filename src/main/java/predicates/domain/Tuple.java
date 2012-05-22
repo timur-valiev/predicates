@@ -5,11 +5,7 @@ import java.util.Arrays;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Тимур
- * Date: 25.04.12
- * Time: 16:06
+/**кортеж
  */
 public class Tuple implements Iterable<Tuple>, Iterator<Tuple> {
     private int dim;

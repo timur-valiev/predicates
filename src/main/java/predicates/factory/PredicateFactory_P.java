@@ -7,12 +7,6 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Iterator;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Тимур
- * Date: 12.04.12
- * Time: 23:44
- */
 public class PredicateFactory_P extends PredicateFactory implements Iterable<Predicate>, Iterator<Predicate> {
     protected Permutation currentPerm;
     protected Permutation nextPerm;

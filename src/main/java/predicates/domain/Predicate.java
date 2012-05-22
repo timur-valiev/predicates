@@ -4,12 +4,6 @@ import com.google.common.collect.ImmutableList;
 
 import java.util.*;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Тимур
- * Date: 11.04.12
- * Time: 23:24
- */
 public class Predicate {
     private Integer dim;
     private Integer capacity;
@@ -35,7 +29,6 @@ public class Predicate {
             vectors.add(ImmutableList.copyOf(vector));
     }
 
-
     public boolean contains(List<Integer> v) {
         return vectors.contains(ImmutableList.copyOf(v));
     }
@@ -43,7 +36,6 @@ public class Predicate {
     public Set<ImmutableList<Integer>> getVectors() {
         return vectors;
     }
-
 
     @Override
     public boolean equals(Object obj) {

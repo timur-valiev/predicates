@@ -8,12 +8,6 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * Created by IntelliJ IDEA.
- * User: Тимур
- * Date: 20.04.12
- * Time: 13:34
- */
 public class PredicateFactory_L extends PredicateFactory implements Iterable<Predicate>, Iterator<Predicate> {
     private int[][] table = new int[4][];
     private Permutation current;
@@ -65,7 +59,5 @@ public class PredicateFactory_L extends PredicateFactory implements Iterable<Pre
     }
 
     @Override
-    public void remove() {
-        //To change body of implemented methods use File | Settings | File Templates.
-    }
+    public void remove() {}
 }
