@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2011.9.29)  23 MAY 2012 00:39
+This is pdfTeX, Version 3.1415926-2.3-1.40.12 (MiKTeX 2.9) (preloaded format=pdflatex 2011.9.29)  23 MAY 2012 10:57
 entering extended mode
 **k.tex
 (C:\pr\IDEA_workspace\predicates\text\k.tex
@@ -912,176 +912,160 @@ File: umsb.fd 2009/06/22 v3.00 AMS symbols B
 
 {C:/ProgramData/MiKTeX/2.9/pdftex/config/pdftex.map}]
 {\Russian \CYRG \cyrl \cyra \cyrv \cyra } 1.
-LaTeX Font Info:    Try loading font information for OMS+cmr on input line 67.
+
+Overfull \hbox (1.78143pt too wide) in paragraph at lines 63--64
+[]\T2A/cmr/m/n/14.4 Исследование си-стем $\OML/cmm/m/it/14.4 k$\T2A/cmr/m/n/14.
+4 -значных функ-ций бы-ло ини-ци-и-ро-ва-но Э.Постом [[],
+ []
+
+LaTeX Font Info:    Try loading font information for OMS+cmr on input line 75.
 ("C:\Program Files\MiKTeX 2.9\tex\latex\base\omscmr.fd"
 File: omscmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
 LaTeX Font Info:    Font shape `OMS/cmr/m/n' in size <14.4> not available
-(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 67.
+(Font)              Font shape `OMS/cmsy/m/n' tried instead on input line 75.
  [2
 
-]
+] [3]
 {\Russian \CYRG \cyrl \cyra \cyrv \cyra } 2.
-LaTeX Font Info:    Try loading font information for T2A+cmtt on input line 74.
+LaTeX Font Info:    Try loading font information for T2A+cmtt on input line 84.
 
 ("C:\Program Files\MiKTeX 2.9\tex\latex\cyrillic\t2acmtt.fd"
 File: t2acmtt.fd 2001/08/11 v1.0a Computer Modern Cyrillic font definitions
 )
-Overfull \hbox (15.31123pt too wide) in paragraph at lines 78--81
+Overfull \hbox (15.31123pt too wide) in paragraph at lines 86--89
 \T2A/cmr/m/n/14.4 объ-ек-ты. Для для этой це-ли хо-ро-шо под-хо-дят ин-тер-фей-
 сы \T2A/cmtt/m/n/14.4 Iterator \T2A/cmr/m/n/14.4 и \T2A/cmtt/m/n/14.4 Iterable\
 T2A/cmr/m/n/14.4 .
  []
 
-[3
+[4
 
 ]
-Overfull \hbox (45.92879pt too wide) in paragraph at lines 99--100
-[]\T2A/cmr/m/n/14.4 Для каж-до-го се-мей-ства пре-ди-ка-тов был на-пи-сан Java-
-класс \T2A/cmtt/m/n/14.4 PredicateFactory_X\T2A/cmr/m/n/14.4 ,
- []
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 115.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 107.
+(hyperref)                removing `math shift' on input line 115.
 
+[5]
 
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 107.
-
-[4]
-
-LaTeX Warning: Command \CYRR invalid in math mode on input line 112.
+LaTeX Warning: Command \CYRR invalid in math mode on input line 120.
 
 Missing character: There is no Р in font cmr12!
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 114.
+(hyperref)                removing `math shift' on input line 122.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 114.
-
-
-LaTeX Warning: Command \CYRO invalid in math mode on input line 116.
-
-Missing character: There is no О in font cmr12!
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 124.
+(hyperref)                removing `math shift' on input line 122.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 124.
+(hyperref)                removing `math shift' on input line 132.
 
 
-LaTeX Warning: Command \CYRE invalid in math mode on input line 126.
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 132.
+
+
+LaTeX Warning: Command \CYRE invalid in math mode on input line 134.
 
 Missing character: There is no Е in font cmr12!
 
-LaTeX Warning: Command \CYRE invalid in math mode on input line 126.
-
-Missing character: There is no Е in font cmr12!
-
-LaTeX Warning: Command \CYRE invalid in math mode on input line 126.
+LaTeX Warning: Command \CYRE invalid in math mode on input line 134.
 
 Missing character: There is no Е in font cmr12!
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 130.
+(hyperref)                removing `math shift' on input line 138.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 130.
+(hyperref)                removing `math shift' on input line 138.
 
 
-LaTeX Warning: Command \cyrr invalid in math mode on input line 133.
-
-Missing character: There is no р in font cmr12!
-
-Overfull \hbox (4.6228pt too wide) in paragraph at lines 132--134
+Overfull \hbox (4.6228pt too wide) in paragraph at lines 140--142
 []\T2A/cmr/m/it/14.4 Предикаты это-го се-мей-ства су-ще-ству-ют толь-ко при $\O
 ML/cmm/m/it/14.4 k \OT1/cmr/m/n/14.4 =$
  []
 
-[5]
-
-LaTeX Warning: Command \cyrr invalid in math mode on input line 135.
-
-Missing character: There is no р in font cmr12!
-
-LaTeX Warning: Command \cyrr invalid in math mode on input line 135.
-
-Missing character: There is no р in font cmr12!
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 155.
-
-
-Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 155.
-
-
-LaTeX Warning: Command \CYRS invalid in math mode on input line 157.
-
-Missing character: There is no С in font cmr12!
 [6]
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 175.
+(hyperref)                removing `math shift' on input line 163.
 
 
 Package hyperref Warning: Token not allowed in a PDF string (Unicode):
-(hyperref)                removing `math shift' on input line 175.
+(hyperref)                removing `math shift' on input line 163.
+
+[7]
+
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 183.
 
 
-Overfull \hbox (24.76752pt too wide) in paragraph at lines 188--189
+Package hyperref Warning: Token not allowed in a PDF string (Unicode):
+(hyperref)                removing `math shift' on input line 183.
+
+
+Overfull \hbox (24.76752pt too wide) in paragraph at lines 200--201
 \T2A/cmr/m/n/14.4 функ-ции со-хра-ня-ют их. Для та-кой про-вер-ки в про-ек-те е
 сть класс PredicateService,
  []
 
-[7]
+
+Overfull \hbox (46.30986pt too wide) in paragraph at lines 200--201
+\T2A/cmtt/m/n/14.4 public static boolean checkSave (Predicate predicate, Functi
+on function)\T2A/cmr/m/n/14.4 . 
+ []
+
+[8]
 {\Russian \CYRG \cyrl \cyra \cyrv \cyra } 3.
-[8
+[9
 
 ]
-Package atveryend Info: Empty hook `BeforeClearDocument' on input line 213.
- [9
+Package atveryend Info: Empty hook `BeforeClearDocument' on input line 227.
+ [10
 
 ]
-Package atveryend Info: Empty hook `AfterLastShipout' on input line 213.
+Package atveryend Info: Empty hook `AfterLastShipout' on input line 227.
  (C:\pr\IDEA_workspace\predicates\text\k.aux)
-Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 213.
-Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 213.
+Package atveryend Info: Executing hook `AtVeryEndDocument' on input line 227.
+Package atveryend Info: Executing hook `AtEndAfterFileList' on input line 227.
 Package rerunfilecheck Info: File `k.out' has not changed.
 (rerunfilecheck)             Checksum: 6D8745CD8FAC668D8F75B490B1F222CB;3385.
  ) 
 Here is how much of TeX's memory you used:
- 9399 strings out of 494045
- 128411 string characters out of 3148372
- 217192 words of memory out of 3000000
- 12463 multiletter control sequences out of 15000+200000
+ 9406 strings out of 494045
+ 128455 string characters out of 3148372
+ 217272 words of memory out of 3000000
+ 12465 multiletter control sequences out of 15000+200000
  18647 words of font info for 49 fonts, out of 3000000 for 9000
  715 hyphenation exceptions out of 8191
- 34i,7n,31p,738b,416s stack positions out of 5000i,500n,10000p,200000b,50000s
+ 34i,7n,31p,738b,442s stack positions out of 5000i,500n,10000p,200000b,50000s
 {C:/Program Files/MiKTeX 2.9/fonts/enc/dvips/cm-super/cm-super-t2a.enc}<C:/Pr
-ogram Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Program Fi
-les/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi12.pfb><C:/Program Files/MiKT
-eX 2.9/fonts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Program Files/MiKTeX 2.9/fo
-nts/type1/public/amsfonts/cm/cmr10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1
-/public/amsfonts/cm/cmr12.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/a
-msfonts/cm/cmsy10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/
-symbols/msam10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/cm-super/sfb
-x1440.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/cm-super/sfbx1728.pfb
-><C:/Program Files/MiKTeX 2.9/fonts/type1/public/cm-super/sfbx2074.pfb><C:/Prog
-ram Files/MiKTeX 2.9/fonts/type1/public/cm-super/sfbx2986.pfb><C:/Program Files
-/MiKTeX 2.9/fonts/type1/public/cm-super/sfbx3583.pfb><C:/Program Files/MiKTeX 2
-.9/fonts/type1/public/cm-super/sfrm1440.pfb><C:/Program Files/MiKTeX 2.9/fonts/
-type1/public/cm-super/sfti1440.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/pub
-lic/cm-super/sftt1440.pfb>
-Output written on k.pdf (9 pages, 277882 bytes).
+ogram Files/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmex10.pfb><C:/Program Fi
+les/MiKTeX 2.9/fonts/type1/public/amsfonts/cm/cmmi10.pfb><C:/Program Files/MiKT
+eX 2.9/fonts/type1/public/amsfonts/cm/cmmi12.pfb><C:/Program Files/MiKTeX 2.9/f
+onts/type1/public/amsfonts/cm/cmmi7.pfb><C:/Program Files/MiKTeX 2.9/fonts/type
+1/public/amsfonts/cm/cmr10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/
+amsfonts/cm/cmr12.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/
+cm/cmsy10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/amsfonts/symbols/
+msam10.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/cm-super/sfbx1440.pf
+b><C:/Program Files/MiKTeX 2.9/fonts/type1/public/cm-super/sfbx1728.pfb><C:/Pro
+gram Files/MiKTeX 2.9/fonts/type1/public/cm-super/sfbx2074.pfb><C:/Program File
+s/MiKTeX 2.9/fonts/type1/public/cm-super/sfbx2986.pfb><C:/Program Files/MiKTeX 
+2.9/fonts/type1/public/cm-super/sfbx3583.pfb><C:/Program Files/MiKTeX 2.9/fonts
+/type1/public/cm-super/sfrm1440.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/pu
+blic/cm-super/sfti1440.pfb><C:/Program Files/MiKTeX 2.9/fonts/type1/public/cm-s
+uper/sftt1440.pfb>
+Output written on k.pdf (10 pages, 293718 bytes).
 PDF statistics:
- 240 PDF objects out of 1000 (max. 8388607)
- 47 named destinations out of 1000 (max. 500000)
+ 255 PDF objects out of 1000 (max. 8388607)
+ 52 named destinations out of 1000 (max. 500000)
  173 words of extra memory for PDF output out of 10000 (max. 10000000)
 

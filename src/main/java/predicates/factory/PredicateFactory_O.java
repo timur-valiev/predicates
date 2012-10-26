@@ -48,9 +48,12 @@ public class PredicateFactory_O extends PredicateFactory implements Iterable<Pre
         for (int i = 0;i < currentPermutation.getCapacity() - 1; i++)
             result.addVector(Arrays.asList(currentPermutation.getValue().get(i),currentPermutation.getValue().get(currentPermutation.getCapacity()-1)));
 
+        for (int i=0;i<currentPermutation.getCapacity();i++)
+            result.addVector(Arrays.asList(i,i));
+
         int edge = 0;
         for (int parent = 1; parent < dim - 2; parent++) {
-            for (int child = 2;child < dim - 1; child++){
+            for (int child = parent + 1;child < dim - 1; child++){
                 if (currentTuple.getValue(edge) == 1)
                     result.addVector(Arrays.asList(currentPermutation.getValue().get(parent),currentPermutation.getValue().get(child)));
                 edge++;

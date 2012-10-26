@@ -5,17 +5,15 @@ import predicates.domain.Predicate;
 import predicates.factory.*;
 import java.io.BufferedWriter;
 import java.io.FileWriter;
-import java.util.ArrayList;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
+
 /*
 Main class-Launcher
 */
 public class App 
 {
     public static void main( String[] args ) throws Exception {
-        BufferedWriter writer =  new BufferedWriter(new FileWriter("text/prilozh_A.txt"));
+        BufferedWriter writer =  new BufferedWriter(new FileWriter("text/prilozh_A3.txt"));
         Set<Predicate> all = new LinkedHashSet<Predicate>();
         Set<Predicate> all_B3 = new LinkedHashSet<Predicate>();
         Set<Predicate> all_C1 = new LinkedHashSet<Predicate>();
@@ -84,21 +82,33 @@ public class App
         all_list.addAll(e_list);
         all_list.addAll(c_list);
         all_list.addAll(b_list);
-        for (Function function: new Function(4,1)){
-            writer.newLine();
-            writer.write(function.getValues().getValues().toString()+" ");
-            int i=0;
+
+        Long ii = 0l;
+        Set<String> ans = new TreeSet<String>();
+        for (Function function: new Function(4,2)){
+            //writer.newLine();
+            //writer.write(function.getValues().getValues().toString()+" ");
+            //int i=0;
+            //writer.write(" ");
+            if(ii%(256*258*256)==0)
+                System.out.println(ii.toString()+" "+ans.size());
+            ii++;
+
+            StringBuilder ss = new StringBuilder();
             for (Predicate predicate:all_list){
-                if(i%10==0)
-                    writer.write(" ");
-                i++;
                 if (PredicateService.checkSave(predicate,function))
-                    writer.write("+");
+                    ss.append("1 ");
                 else
-                    writer.write("o");
+                    ss.append("0 ");
             }
+            ans.add(ss.toString());
         }
 
+        for(String s: ans){
+            writer.write(s+"\n");
+        }
+
+        /*
         int i=0;
         writer.write("\n\nСписок предикатов, описывающих предполные классы\n");
         writer.write("Класс Р\n");
@@ -136,7 +146,7 @@ public class App
             i++;
             writer.write("#"+i+"\n");
             writer.write(predicate.getVectors().toString()+"\n");
-        }
+        }*/
 
         writer.flush();
         writer.close();
