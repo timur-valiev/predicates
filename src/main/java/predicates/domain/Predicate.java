@@ -69,4 +69,12 @@ public class Predicate {
     public boolean isFull() {
         return Math.pow(dim,capacity) == vectors.size();
     }
+
+    public Integer getDim() {
+        return dim;
+    }
+
+    public Integer getCapacity() {
+        return capacity;
+    }
 }

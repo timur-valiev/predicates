@@ -1,5 +1,6 @@
 package predicates;
 
+import predicates.domain.FastPredicate;
 import predicates.domain.Function;
 import predicates.domain.Predicate;
 import predicates.factory.*;
@@ -82,20 +83,21 @@ public class App
         all_list.addAll(e_list);
         all_list.addAll(c_list);
         all_list.addAll(b_list);
-
         Long ii = 0l;
+
+        FastPredicate[] fastPredicates = new FastPredicate[all_list.size()];
+        for (int i =0;i<all_list.size();i++)
+            fastPredicates[i] = new FastPredicate(all_list.get(i));
+
         Set<String> ans = new TreeSet<String>();
+
         for (Function function: new Function(4,2)){
-            //writer.newLine();
-            //writer.write(function.getValues().getValues().toString()+" ");
-            //int i=0;
-            //writer.write(" ");
-            if(ii%(256*258*256)==0)
+            if(ii%(4096)==0)
                 System.out.println(ii.toString()+" "+ans.size());
             ii++;
 
             StringBuilder ss = new StringBuilder();
-            for (Predicate predicate:all_list){
+            for (FastPredicate predicate:fastPredicates){
                 if (PredicateService.checkSave(predicate,function))
                     ss.append("1 ");
                 else
