@@ -9,6 +9,8 @@ public class ExtendedFunction {
     private int[][] valuesForVectors;
     private boolean[][] computed;
     private static int[] pows;
+    public byte existValues;
+
     static {
         pows=new int[5];
         for(int i=1;i<5;i++){
@@ -20,7 +22,9 @@ public class ExtendedFunction {
         dim = function.getDim();
         capacity = function.getCapacity();
         values = new int[function.getValues().getValues().size()];
+        existValues = 0;
         for (int i=0;i<function.getValues().getValues().size();i++){
+            existValues |= 1<<function.getValue(i);
             values[i] = function.getValue(i);
         }
         if (capacity==2){
@@ -36,6 +40,7 @@ public class ExtendedFunction {
     public ExtendedFunction() {
         valuesForVectors = new int[5][];
         computed = new boolean[5][];
+        existValues = 0;
         for(int i=1;i<5;i++){
             valuesForVectors[i]= new int[pows[i]];
             computed[i] = new boolean[pows[i]];
@@ -70,8 +75,10 @@ public class ExtendedFunction {
         dim = function.getDim();
         capacity = function.getCapacity();
         values = new int[function.getValues().getValues().size()];
+        existValues = 0;
         for (int i=0;i<function.getValues().getValues().size();i++){
             values[i] = function.getValue(i);
+            existValues |= 1<<function.getValue(i);
         }
         if (capacity==2){
             for(int i=1;i<5;i++){

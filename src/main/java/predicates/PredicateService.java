@@ -22,6 +22,13 @@ public class PredicateService {
         }
         else
         if(function.getCapacity()==2){
+            boolean ans = false;
+            for (byte b:predicate.existValues){
+                ans=ans || (b<=function.existValues && ((function.existValues & b)==b));
+            }
+            if (!ans)
+                return false;
+
             for (int pairCode:predicate.pairCodes) {
                 try{
                     if (!predicate.codes[function.getValueForVector(predicate.capacity,pairCode)])
