@@ -57,4 +57,8 @@ public class Function implements Iterable<Function>, Iterator<Function> {
     public Tuple getValues() {
         return values;
     }
+
+    public Integer getDim() {
+        return dim;
+    }
 }

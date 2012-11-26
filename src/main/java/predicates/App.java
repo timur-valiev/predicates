@@ -1,9 +1,11 @@
 package predicates;
 
+import predicates.domain.ExtendedFunction;
 import predicates.domain.FastPredicate;
 import predicates.domain.Function;
 import predicates.domain.Predicate;
 import predicates.factory.*;
+
 import java.io.BufferedWriter;
 import java.io.FileWriter;
 import java.util.*;
@@ -91,23 +93,29 @@ public class App
 
         Set<String> ans = new TreeSet<String>();
 
+        Date date = new Date();
+
+
+        ExtendedFunction extendedFunction = new ExtendedFunction();
         for (Function function: new Function(4,2)){
-            if(ii%(4096)==0)
-                System.out.println(ii.toString()+" "+ans.size());
+            if(ii%(100000)==0)
+                System.out.println(ii.toString()+" "+ans.size()+" "+(new Date((new Date()).getTime()-date.getTime())));
             ii++;
 
+            extendedFunction.fill(function);
             StringBuilder ss = new StringBuilder();
             for (FastPredicate predicate:fastPredicates){
-                if (PredicateService.checkSave(predicate,function))
+                if (PredicateService.checkSave(predicate,extendedFunction))
                     ss.append("1 ");
                 else
                     ss.append("0 ");
             }
             ans.add(ss.toString());
+            //writer.write(ss+"\n");
         }
 
         for(String s: ans){
-            writer.write(s+"\n");
+            //writer.write(s+"\n");
         }
 
         /*
