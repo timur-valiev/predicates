@@ -91,7 +91,29 @@ public class App
         for (int i =0;i<all_list.size();i++)
             fastPredicates[i] = new FastPredicate(all_list.get(i));
 
-        Set<String> ans = new TreeSet<String>();
+        Set<String> ans = new HashSet<String>();
+
+        long [][][][] xxx = new long[4][][][];
+        xxx[3]=new long[64*64][64][2];
+        xxx[2]=new long[16*16][16][2];
+        xxx[1]=new long[4*4][4][2];
+
+        for (int cap=1;cap<4;cap++)
+            for (int pair=0;pair<xxx[cap].length;pair++)
+                for(int vect=0;vect<xxx[cap][vect].length;vect++){
+                    long r1=0l;
+                    long r2=0l;
+                    for(int i=0;i<64;i++)
+                        if(fastPredicates[i].capacity==cap && fastPredicates[i].existPairCodes[pair] && !fastPredicates[i].codes[vect]){
+                            r1 |= 1<<i;
+                        }
+                    for(int i=64;i<fastPredicates.length;i++)
+                        if(fastPredicates[i].capacity==cap && fastPredicates[i].existPairCodes[pair] && !fastPredicates[i].codes[vect]){
+                            r2 |= 1<<(i-64);
+                        }
+                    xxx[cap][pair][vect][0]=~r1;
+                    xxx[cap][pair][vect][1]=~r2;
+                }
 
         Date date = new Date();
 
@@ -103,14 +125,14 @@ public class App
             ii++;
 
             extendedFunction.fill(function);
-            StringBuilder ss = new StringBuilder();
-            for (FastPredicate predicate:fastPredicates){
-                if (PredicateService.checkSave(predicate,extendedFunction))
-                    ss.append("1 ");
-                else
-                    ss.append("0 ");
-            }
-            ans.add(ss.toString());
+            long r1=~0;
+            long r2=~0;
+            for (int cap=1;cap<4;cap++)
+                for (int pair = 0;pair< ExtendedFunction.pows[cap];pair++){
+                    r1 &= xxx[cap][pair][extendedFunction.valuesForVectors[cap][pair]][0];
+                    r2 &= xxx[cap][pair][extendedFunction.valuesForVectors[cap][pair]][1];
+                }
+            ans.add(String.valueOf(r1)+" "+String.valueOf(r2));
             //writer.write(ss+"\n");
         }
 

@@ -13,6 +13,7 @@ public class FastPredicate {
     public boolean[] codes;//коды всех векторов
     public int[] pairCodes;
     public byte[] existValues;
+    public boolean[] existPairCodes;
 
     public FastPredicate(Predicate predicate) {
         dim = predicate.getDim();
@@ -20,6 +21,7 @@ public class FastPredicate {
         vectors = new HashSet<MyArray>();
         codes = new boolean[(int) Math.pow(dim,capacity)];
         existValues = new byte[predicate.getVectors().size()];
+        existPairCodes = new boolean[(int)Math.pow(dim,2*capacity)];
 
         int ii=0;
         for (ImmutableList<Integer> list:predicate.getVectors()){
@@ -43,6 +45,7 @@ public class FastPredicate {
                     res+=cur1.array[i]*dim+cur2.array[i];
                 }
                 pairCodes[ii]=res;
+                existPairCodes[res]=true;
                 ii++;
             }
 
