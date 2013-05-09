@@ -1,0 +1,187 @@
+\documentclass[a4paper,14pt]{extreport}
+\usepackage[utf8]{inputenc}
+%\usepackage[cp1251]{inputenc}
+\usepackage[english,russian]{babel}
+\usepackage[T2A]{fontenc}
+\usepackage{amsmath,amssymb,epsfig}
+\usepackage{paralist}
+\usepackage{indentfirst}
+\usepackage[width=17cm,height=24cm]{geometry}
+\usepackage[unicode]{hyperref}
+\usepackage{cmap}
+\usepackage{graphicx}
+%\hoffset=20mm
+\voffset=8mm
+\RequirePackage{enumitem}
+%\textwidth=18cm
+%\textheight=235mm
+%\hoffset=-20mm
+%voffset=-15mm
+\setenumerate[1]{fullwidth }
+\addto\captionsrussian{\def\contentsname{Оглавление}}
+\addto\captionsrussian{\def\bibname{Список литературы}}
+\makeatletter
+\renewcommand{\@biblabel}[1]{#1.\hfil}
+%\usepackage{titlesec}
+\usepackage[titles]{tocloft}
+\renewcommand{\cftchappresnum}{Глава~}
+\renewcommand{\cftchapleader}{\bfseries\cftdotfill{\cftdotsep}}
+\renewcommand{\cftchapaftersnum}{.}
+\newlength{\zyvseclen}
+\settowidth{\zyvseclen}{\bfseries\cftchappresnum\cftchapaftersnum}
+%\addtolength{\zyvseclen}{2mm}
+\addtolength{\cftchapnumwidth}{\zyvseclen}
+
+\newcommand{\proof}{\trivlist \item[\hskip
+      \labelsep{\bf Доказательство.}]}
+
+\newtheorem{thm}{Теорема}
+\newtheorem{lm}{Лемма}
+\newtheorem{sld}{Следствие}
+\newtheorem{zam}{Замечание}
+\newtheorem{utv}{Утверждение}
+\newtheorem{opr}{Определение}
+\makeatletter
+\def\thmstyle{\it}
+\def\@begintheorem#1#2{\it \trivlist \item[\hskip
+       \labelsep{\bf #1\ #2.}]\thmstyle}
+\def\@opargbegintheorem#1#2#3{\it \trivlist \item[\hskip
+       \labelsep{\bf #1\ #2\ (#3).}]\thmstyle}
+\makeatother
+
+\newcommand{\normI}{\renewcommand{\baselinestretch}{1.}}
+\newcommand{\biggI}{\renewcommand{\baselinestretch}{1.1}}
+\biggI
+
+\begin{document}
+\newpage
+\tableofcontents
+\newpage
+\chapter{ Введение и постановка задачи }
+
+\section{Введение}
+\section{Цели и задачи}
+ 
+\newpage
+\chapter{Построение предполных классов четырехзначной логики}
+\section{Основные понятия}
+\section{Алгоритмы поиска предполных классов}
+\section{Результаты}
+
+\newpage
+\chapter{Построение таблицы принадлежности функций предполным классам}
+\section{Описание алгоритма}
+\subsubsection{Перебор функций}
+\subsubsection{Проверка сохранения функцией предиката}
+\section{Результаты}
+
+\newpage
+\chapter{Задача поиска максимального базиса}
+Рассмотрим задачу поиска базисов. Особый интерес представляет поиск максимальных или близких к ним по мощности. 
+
+Для поиска решений был разработан переборный вероятностный алгоритм, использующий на входе полученную ранее таблицу принадлежности функций предполным классам и выдающий в бесконечном цикле наборы строк, соответствующие базисам. 
+
+Сформулируем критерий, по которому будет определяться, соответствует ли набор строк таблицы какому-нибудь базису.
+Каждой строке таблицы будем сопоставлять функцию(пример), на которой достигается распределение по предикатам описываемое данной строкой. Каждому столбцу ставится в соответствие предполный класс.  
+\begin{utv}
+Набор строк $R$ таблицы принадлежности функций предполным классам соответствует базису в $P_4$ тогда и только тогда, когда выполнены следующие условия:
+\begin{itemize}
+\item для каждого столбца найдется строка из $R$, на пересечении которых стоит $0$.    
+\item для каждой строки из $R$ найдется столбец такой, что только на пересечении с этой строкой из $R$ в столбце стоит $0$.   
+\end{itemize}
+Первое условие гарантирует покрытие всех столбцов(предполных классов), второе - невозможность исключения из набора элементов без сохранения первого свойства. 
+\end{utv}
+
+\section{Сложность задачи}
+Будем обозначать задачу поиска максимального базиса по таблице принадлежности функций предполным классам $A$.
+
+Будем называть набор строк произвольной таблицы, состоящей из нулей и единиц(далее, если не оговорено обратное, будем считать, что все описываемые таблицы состоят из нулей и единиц), базисным, если для него выполнены условия утверждения1.
+
+Будем обозначать задачу поиска максимального по мощности базисного набора таблицы как $A_1$.
+
+Заметим, что задача А сводится к задаче $A_1$.
+
+За $A_0$ обозначим следующую задачу: пусть на вход подается таблица и число $n$. Необходимо выяснить, существует ли базисный набор строк, мощность которого превосходит $n$.
+
+За $A_2$ обозначим следующий частный случай задачи $A_1$: пусть в каждом столбце ровно 2 нуля. Тогда заметим, что таблица, соответствующая такой задаче, будет являться инвертированной матрицей инцидентности для некоторого графа.
+
+За $A_3$ обозначим задачу поиска минимального независимого доминирующего множества в графе.
+
+\begin{lm}
+Задача $A_3$ сводится к задаче $A_2$.
+\end{lm}
+\begin{proof}
+Будем называть строку и столбец инцидентными, если на их пересечении стоит 0. 
+
+Будем называть строки смежными, если существует столбец, инцидентный им обеим.
+
+Посмотрим, какими свойствами будет обладать набор $R$ строк, который получится на выходе алгоритма, решающего задачу $A_2$:
+\begin{itemize}
+\item максимальный по мощности    
+\item для каждого столбца найдется хотя бы одна инцидентная ему строка из $R$
+\item для каждой строки из $R$ существует столбец, инцидентный ей и никакая другая строка не будет ему инцидентна     
+\end{itemize}
+
+Тогда дополнение $Q$ к $R$ будет обладать следующими свойствами:
+\begin{itemize}
+\item $Q$ минимальное по мощности    
+\item никакие две строки из $Q$ не будут смежными
+\item для каждой строки из $R$ найдется смежная ей строка из $Q$     
+\end{itemize}
+
+Заметим, что таблица, соответствующая задаче $A_2$, будет являться инвертированной матрицей инцидентности для некоторого графа.
+
+Тогда для задачу $A_3$ можно решать следующим образом: построить инвертированную таблицу инцидентности графа, подать на вход алгоритму, решающему задачу $A_2$, взять дополнение к ответу.
+\end{proof}
+
+\begin{lm}
+Задача $A_2$ сводится к задаче $A_1$.
+\end{lm}
+\begin{proof}
+Это следует из того, что $A_2$ является частным случаем $A_1$.
+\end{proof}
+
+\begin{lm}
+Задача $A_1$ сводится к задаче $A_0$.
+\end{lm}
+\begin{proof}
+Для того чтобы найти ответ на $A_1$ можно использовать бинарный поиск по мощности базиса и алгоритм для $A_0$.
+\end{proof}
+
+\begin{lm}
+Задача $A_0$ лежит в классе NP.
+\end{lm}
+\begin{proof}
+Сертификатом будем считать набор строк. Необходимо проверить условия из утверждения. Это можно сделать двумя вложенными циклами, сложность алгоритма будет $O(n*m+n*n)$, где $n$-количество строк,$m$-количество столбцов.
+\end{proof}
+
+\begin{thm}
+Задача $A_1$ NP-полна.
+\end{thm}
+\begin{proof}
+Из лемм 2 и 3 следует, что задача $A_3$ сводится к $A_1$, что означает, что $A_1$ NP-трудная. Задача $A_1$ сводится к задаче $A_0$, которая лежит в классе NP. Из этих двух фактов, следует, что $A_1$ NP-полна.  
+\end{proof}
+\section{Алгоритм}
+\section{Результаты}
+
+
+\chapter{Заключение}
+
+
+
+\newpage
+\addcontentsline{toc}{chapter}{Список литературы}
+\begin{thebibliography}{9}
+\bibitem{post1}	Post E.L. Introduction to a general theory of elementary propositions // 
+Amer. J. Math.— 1921.- V. 43, №4.- P. 163-185. 
+\bibitem{yabl} Е.Ю. Захарова, В.Б. Кудрявцев, С.В. Яблонский О предполных в $k$-значных логиках. // ДАН СССР, 1969, т.186, \No 3, стр.509-512 
+\bibitem{post2}	Post E.L. Two-valued iterative systems of mathematical logic // Annals of 
+Math. Studies. Princeton Univ. Press.— 1941.— V. 5. 
+\bibitem{march} Марченков С.С. Функциональные системы с операцией суперпозиции
+\bibitem{roz1}	Rosenberg I.G. La structure des fonctions de plusieurs variables sur un ensemble fini // C.R. Acad. Sci. Paris. Ser A.B.— 1965.— V. 260.— P. 3817- 3819. 
+\bibitem{roz2}	Rosenberg I.G. Uber die funktionale Vollstandigkeit in den mehrwertigen Logiken // Rozpravy Ceskoslovenske Akad. Ved. Rada Math. Pfir. Ved. Praha.— 1970.— Bd. 80.- S. 3-93. 
+\bibitem{git} Адрес проекта в интернете: https://github.com/zloi-timur/predicates 
+
+
+\end{thebibliography}
+\end{document}
