@@ -2,6 +2,7 @@ package predicates.domain;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Scanner;
 
 /**
  * Created by IntelliJ IDEA.
@@ -20,6 +21,13 @@ public class MyArray {
         array = new int[list.size()];
         for (int j=0;j<list.size();j++)
             array[j]=list.get(j);
+    }
+
+    public MyArray(Scanner scanner, Integer capacity) {
+        array = new int[capacity];
+        for (int j=0;j<capacity;j++)
+            array[j]=scanner.nextInt();
+
     }
 
     @Override

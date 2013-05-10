@@ -7,6 +7,7 @@ import predicates.domain.Predicate;
 import predicates.factory.*;
 
 import java.io.BufferedWriter;
+import java.io.FileInputStream;
 import java.io.FileWriter;
 import java.util.*;
 
@@ -16,79 +17,11 @@ Main class-Launcher
 public class App {
     public static void main(String[] args) throws Exception {
         BufferedWriter writer = new BufferedWriter(new FileWriter("text/prilozh_A3.txt"));
-        Set<Predicate> all = new LinkedHashSet<Predicate>();
-        Set<Predicate> all_B3 = new LinkedHashSet<Predicate>();
-        Set<Predicate> all_C1 = new LinkedHashSet<Predicate>();
-        Set<Predicate> all_B4 = new LinkedHashSet<Predicate>();
-        Set<Predicate> all_C2 = new LinkedHashSet<Predicate>();
-        Set<Predicate> all_C3 = new LinkedHashSet<Predicate>();
-        Set<Predicate> all_E = new LinkedHashSet<Predicate>();
-        Set<Predicate> all_L = new LinkedHashSet<Predicate>();
-        Set<Predicate> all_O = new LinkedHashSet<Predicate>();
-        Set<Predicate> all_P = new LinkedHashSet<Predicate>();
 
-        for (Predicate predicate : new PredicateFactory_B(3, 1, 4)) {
-            all.add(predicate);
-            all_B3.add(predicate);
-        }
-        for (Predicate predicate : new PredicateFactory_B(4, 1, 4)) {
-            all.add(predicate);
-            all_B4.add(predicate);
-        }
-        for (Predicate predicate : new PredicateFactory_C(4, 1)) {
-            all.add(predicate);
-            all_C1.add(predicate);
-        }
-        for (Predicate predicate : new PredicateFactory_C(4, 2)) {
-            all.add(predicate);
-            all_C2.add(predicate);
-        }
-        for (Predicate predicate : new PredicateFactory_C(4, 3)) {
-            all.add(predicate);
-            all_C3.add(predicate);
-        }
-        for (Predicate predicate : new PredicateFactory_E(4)) {
-            all.add(predicate);
-            all_E.add(predicate);
-        }
-        for (Predicate predicate : new PredicateFactory_L(4)) {
-            all.add(predicate);
-            all_L.add(predicate);
-        }
-        for (Predicate predicate : new PredicateFactory_O(4)) {
-            if (!all_O.contains(predicate.getMirror())) {
-                all.add(predicate);
-                all_O.add(predicate);
-            }
-        }
-        for (Predicate predicate : new PredicateFactory_P(4)) {
-            all.add(predicate);
-            all_P.add(predicate);
-        }
-        writer.write("Приложение А\n\nТаблица принадлежности функций предполным классам\n");
-
-        List<Predicate> all_list = new ArrayList<Predicate>();
-        List<Predicate> p_list = new ArrayList<Predicate>(all_P);
-        List<Predicate> o_list = new ArrayList<Predicate>(all_O);
-        List<Predicate> l_list = new ArrayList<Predicate>(all_L);
-        List<Predicate> e_list = new ArrayList<Predicate>(all_E);
-        List<Predicate> c_list = new ArrayList<Predicate>(all_C1);
-        c_list.addAll(all_C2);
-        c_list.addAll(all_C3);
-        List<Predicate> b_list = new ArrayList<Predicate>(all_B3);
-        b_list.addAll(all_B4);
-
-        all_list.addAll(p_list);
-        all_list.addAll(o_list);
-        all_list.addAll(l_list);
-        all_list.addAll(e_list);
-        all_list.addAll(c_list);
-        all_list.addAll(b_list);
-        Long ii = 0l;
-
-        FastPredicate[] fastPredicates = new FastPredicate[all_list.size()];
-        for (int i = 0; i < all_list.size(); i++)
-            fastPredicates[i] = new FastPredicate(all_list.get(i));
+        FastPredicate[] fastPredicates = new FastPredicate[82];
+        Scanner scanner= new Scanner(new FileInputStream("text/predicates.txt"));
+        for (int i = 0; i < 82; i++)
+            fastPredicates[i] = new FastPredicate(scanner);
 
         Map<String, Long> ans = new HashMap<String, Long>();
 
@@ -97,6 +30,7 @@ public class App {
         ExtendedFunction extendedFunction = new ExtendedFunction();
         B4_checker b4_checker = new B4_checker();
 
+        Long ii=0l;
         for (Function function : new Function(4, 2)) {
             if (ii % (1000000) == 0)
                 System.out.println(ii.toString() + " " + ans.size() + " " + (new Date((new Date()).getTime() - date.getTime())));
@@ -143,6 +77,24 @@ public class App {
 
         writer.flush();
         writer.close();
+
+    }
+
+    private static String makeResult(ExtendedFunction extendedFunction, FastPredicate[] fastPredicates){
+        StringBuilder ss = new StringBuilder();
+        B4_checker b4_checker = new B4_checker();
+        for (int i = 0; i < fastPredicates.length - 1; i++) {
+            if (PredicateService.checkSave(fastPredicates[i], extendedFunction))
+                ss.append("1 ");
+            else
+                ss.append("0 ");
+        }
+        if (b4_checker.check(extendedFunction))
+            ss.append("1 ");
+        else
+            ss.append("0 ");
+
+        return ss.toString();
     }
 }
 
@@ -175,9 +127,10 @@ class B4_checker {
                     for (Integer i3 : list.get(3)) {
                         set1.add(i0%4);set1.add(i1%4);set1.add(i2%4);set1.add(i3%4);
                         set2.add((i0/4)%4);set2.add((i1/4)%4);set2.add((i2/4)%4);set2.add((i3/4)%4);
-                        if(set1.size()==4 &&set2.size()==4)
+                        if(set1.size()<4 && set2.size()<4)
                             return false;
-
+                        set1.clear();
+                        set2.clear();
                     }
 
 

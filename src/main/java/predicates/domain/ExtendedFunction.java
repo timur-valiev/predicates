@@ -67,4 +67,21 @@ public class ExtendedFunction {
             }
         }
     }
+
+    public void fill(long funk){
+        dim = 4;
+        capacity = 2;
+        values = new int[16];
+        existValues = 0;
+        for (int i=0;i<16;i++){
+            values[i] = (int) (funk %4);
+            existValues |= 1<<(int)funk%4;
+            funk /= 4;
+        }
+        if (capacity==2){
+            for(int i=1;i<5;i++){
+                Arrays.fill(computed[i],false);
+            }
+        }
+    }
 }
