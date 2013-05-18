@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.Random;
 import java.util.Scanner;
 
-public class App2 {
+public class MaxBasisFinder {
     static ArrayList<ArrayList<Integer>> predToFunc = new ArrayList<ArrayList<Integer>>();
     static ArrayList<ArrayList<Integer>> funcToPred = new ArrayList<ArrayList<Integer>>();
     static int[][] probs = new int[82][122283];//для i j хранит сколько предикатов забивается функцией #i начиная с позиции j

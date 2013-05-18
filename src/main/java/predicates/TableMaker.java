@@ -14,7 +14,7 @@ import java.util.*;
 /*
 Main class-Launcher
 */
-public class App {
+public class TableMaker {
     public static void main(String[] args) throws Exception {
         BufferedWriter writer = new BufferedWriter(new FileWriter("text/prilozh_A3.txt"));
 
