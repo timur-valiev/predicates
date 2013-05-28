@@ -50,7 +50,7 @@ public class WeightRandGenerator {
     }
 
     private int getCol(int need){
-        return need + generator.nextInt(82-pos-need);
+        return need + Math.max(Math.max(generator.nextInt(82-pos-need),generator.nextInt(82-pos-need)),generator.nextInt(82-pos-need));
     }
 
     public int getSize(int need){

@@ -52,7 +52,7 @@ public class MaxBasisFinder {
         boolean[] usedPredicates = new boolean[82];
         boolean[] basis = new boolean[82];
 
-        int minPow = 10;
+        int minPow = 19;
         System.out.println(1111);
 
         while (true) {
@@ -102,7 +102,7 @@ public class MaxBasisFinder {
         int cc = 0;
         while (usedFunctions[f]) {
             cc++;
-            if (generator.getSize(need) / 2 < cc)
+            if (generator.getSize(need) / 5 * 3  < cc)
                 throw new Exception();
             f = generator.next(need);
         }
